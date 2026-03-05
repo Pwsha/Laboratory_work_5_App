@@ -1,18 +1,18 @@
 package org.example.program;
 
-import org.example.program.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class StudyGroup implements Comparable<StudyGroup> {
-    private Long id;
-    private String name;
-    private Coordinates coordinates;
-    private java.time.LocalDateTime creationDate;
-    private long studentsCount;
-    private int expelledStudents;
-    private FormOfEducation formOfEducation;
-    private Semester semesterEnum;
-    private Person groupAdmin;
+    private Long id; // Поле не может быть null, >0, уникальное, генерируется автоматически
+    private String name; // Поле не может быть null, не пустое
+    private Coordinates coordinates; // Поле не может быть null
+    private LocalDateTime creationDate; // Поле не может быть null, генерируется автоматически
+    private long studentsCount; // >0
+    private int expelledStudents; // >0
+    private FormOfEducation formOfEducation; // Поле не может быть null
+    private Semester semesterEnum; // Поле не может быть null
+    private Person groupAdmin; // Может быть null
 
     public StudyGroup() {
     }
@@ -34,7 +34,7 @@ public class StudyGroup implements Comparable<StudyGroup> {
 
     public void setName(String name) {
         if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("name не может быть null или пустым");
+            throw new IllegalArgumentException("name не может быть пустым");
         }
         this.name = name;
     }
@@ -50,11 +50,11 @@ public class StudyGroup implements Comparable<StudyGroup> {
         this.coordinates = coordinates;
     }
 
-    public java.time.LocalDateTime getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(java.time.LocalDateTime creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         if (creationDate == null) {
             throw new IllegalArgumentException("creationDate не может быть null");
         }
@@ -83,7 +83,6 @@ public class StudyGroup implements Comparable<StudyGroup> {
         this.expelledStudents = expelledStudents;
     }
 
-
     public FormOfEducation getFormOfEducation() {
         return formOfEducation;
     }
@@ -94,7 +93,6 @@ public class StudyGroup implements Comparable<StudyGroup> {
         }
         this.formOfEducation = formOfEducation;
     }
-
 
     public Semester getSemesterEnum() {
         return semesterEnum;
@@ -113,6 +111,24 @@ public class StudyGroup implements Comparable<StudyGroup> {
 
     public void setGroupAdmin(Person groupAdmin) {
         this.groupAdmin = groupAdmin;
+    }
+
+    /**
+     * Проверяет валидность объекта.
+     */
+    public boolean isValid() {
+        try {
+            return id != null && id > 0 &&
+                    name != null && !name.trim().isEmpty() &&
+                    coordinates != null &&
+                    creationDate != null &&
+                    studentsCount > 0 &&
+                    expelledStudents > 0 &&
+                    formOfEducation != null &&
+                    semesterEnum != null;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
@@ -135,16 +151,7 @@ public class StudyGroup implements Comparable<StudyGroup> {
 
     @Override
     public String toString() {
-        return "program.StudyGroup{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", coordinates=" + coordinates +
-                ", creationDate=" + creationDate +
-                ", studentsCount=" + studentsCount +
-                ", expelledStudents=" + expelledStudents +
-                ", formOfEducation=" + formOfEducation +
-                ", semesterEnum=" + semesterEnum +
-                ", groupAdmin=" + groupAdmin +
-                '}';
+        return String.format("StudyGroup[id=%d, name='%s', students=%d, form=%s, semester=%s]",
+                id, name, studentsCount, formOfEducation, semesterEnum);
     }
 }

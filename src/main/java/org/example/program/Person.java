@@ -4,11 +4,11 @@ import java.util.Date;
 import java.util.Objects;
 
 public class Person {
-    private String name; // Поле не может быть null, Строка не может быть пустой
-    private Date birthday; // Поле может быть null
-    private Integer weight; // Поле не может быть null, Значение поля должно быть больше 0
-    private String passportID; // Длина строки не должна быть больше 20, Поле не может быть null
-    private Location location; // Поле может быть null
+    private String name; // Не null, не пустое
+    private Date birthday; // Может быть null
+    private Integer weight; // Не null, >0
+    private String passportID; // Длина <= 20, не null
+    private Location location; // Может быть null
 
     public Person() {
     }
@@ -19,7 +19,7 @@ public class Person {
 
     public void setName(String name) {
         if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("name не может быть null или пустым");
+            throw new IllegalArgumentException("name не может быть пустым");
         }
         this.name = name;
     }
@@ -27,7 +27,6 @@ public class Person {
     public Date getBirthday() {
         return birthday;
     }
-
 
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
@@ -48,13 +47,12 @@ public class Person {
         return passportID;
     }
 
-
     public void setPassportID(String passportID) {
         if (passportID == null) {
             throw new IllegalArgumentException("passportID не может быть null");
         }
         if (passportID.length() > 20) {
-            throw new IllegalArgumentException("длина passportID не должна превышать 20 символов");
+            throw new IllegalArgumentException("длина passportID не должна превышать 20");
         }
         this.passportID = passportID;
     }
@@ -67,31 +65,33 @@ public class Person {
         this.location = location;
     }
 
+    public boolean isValid() {
+        try {
+            return name != null && !name.trim().isEmpty() &&
+                    weight != null && weight > 0 &&
+                    passportID != null && passportID.length() <= 20;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
         return Objects.equals(name, person.name) &&
-                Objects.equals(birthday, person.birthday) &&
-                Objects.equals(weight, person.weight) &&
-                Objects.equals(passportID, person.passportID) &&
-                Objects.equals(location, person.location);
+                Objects.equals(passportID, person.passportID);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, birthday, weight, passportID, location);
+        return Objects.hash(name, passportID);
     }
 
     @Override
     public String toString() {
-        return "program.Person{" +
-                "name='" + name + '\'' +
-                ", birthday=" + birthday +
-                ", weight=" + weight +
-                ", passportID='" + passportID + '\'' +
-                ", location=" + location +
-                '}';
+        return "Person{name='" + name + "', passport='" + passportID + "'}";
     }
+
 }

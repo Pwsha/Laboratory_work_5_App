@@ -1,2 +1,2 @@
 id,name,coordinates_x,coordinates_y,creationDate,studentsCount,expelledStudents,formOfEducation,semesterEnum,groupAdmin_name,groupAdmin_birthday,groupAdmin_weight,groupAdmin_passportID,groupAdmin_location_x,groupAdmin_location_y,groupAdmin_location_z
-org.example.program.Parsing_csv@2077d4de
+1772699731374,r,334.0,433,2026-03-05T11:35:30.5712777,34,23,FULL_TIME_EDUCATION,FOURTH,Ghj,,34,2345643,345.0,32.0,456.0

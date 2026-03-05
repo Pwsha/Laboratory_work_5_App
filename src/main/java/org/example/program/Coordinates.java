@@ -2,9 +2,10 @@ package org.example.program;
 
 import java.util.Objects;
 
+
 public class Coordinates {
-    private Float x;
-    private long y;
+    private Float x; // Максимальное значение: 741, не null
+    private long y; // > -938
 
     public Coordinates() {
     }
@@ -23,7 +24,6 @@ public class Coordinates {
         this.x = x;
     }
 
-
     public long getY() {
         return y;
     }
@@ -35,6 +35,10 @@ public class Coordinates {
         this.y = y;
     }
 
+    public boolean isValid() {
+        return x != null && x <= 741 && y > -938;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -43,7 +47,6 @@ public class Coordinates {
         return y == that.y && Objects.equals(x, that.x);
     }
 
-
     @Override
     public int hashCode() {
         return Objects.hash(x, y);
@@ -51,9 +54,6 @@ public class Coordinates {
 
     @Override
     public String toString() {
-        return "program.Coordinates{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        return "Coordinates{x=" + x + ", y=" + y + '}';
     }
 }

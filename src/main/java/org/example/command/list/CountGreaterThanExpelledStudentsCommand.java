@@ -1,0 +1,36 @@
+package org.example.command.list;
+
+import org.example.command.Command;
+import org.example.program.StudyGroup;
+import java.util.HashSet;
+import java.util.Scanner;
+
+public class CountGreaterThanExpelledStudentsCommand implements Command {
+
+    @Override
+    public String execute(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
+        if (args.length == 0) {
+            return "Ошибка: укажите expelledStudents";
+        }
+
+        try {
+            int value = Integer.parseInt(args[0]);
+            long count = collection.stream()
+                    .filter(g -> g.getExpelledStudents() > value)
+                    .count();
+
+            return "Количество элементов с expelledStudents > " + value + ": " + count;
+        } catch (NumberFormatException e) {
+            return "Ошибка: expelledStudents должен быть числом";
+        }
+    }
+
+    @Override
+    public String getName() { return "count_greater_than_expelled_students"; }
+
+    @Override
+    public String getDescription() { return "количество элементов с expelledStudents > заданного"; }
+
+    @Override
+    public String getSyntax() { return "count_greater_than_expelled_students expelledStudents"; }
+}

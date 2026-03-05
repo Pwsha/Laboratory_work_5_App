@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public class Location {
     private double x;
-    private Double y;
-    private Float z;
+    private Double y; // Не null
+    private Float z; // Не null
 
     public Location() {
     }
@@ -40,12 +40,16 @@ public class Location {
         this.z = z;
     }
 
+    public boolean isValid() {
+        return y != null && z != null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Location location = (Location) o;
-        return Double.compare(location.x, x) == 0 &&
+        return Double.compare(x, location.x) == 0 &&
                 Objects.equals(y, location.y) &&
                 Objects.equals(z, location.z);
     }
@@ -57,10 +61,6 @@ public class Location {
 
     @Override
     public String toString() {
-        return "program.Location{" +
-                "x=" + x +
-                ", y=" + y +
-                ", z=" + z +
-                '}';
+        return "Location{x=" + x + ", y=" + y + ", z=" + z + '}';
     }
 }
