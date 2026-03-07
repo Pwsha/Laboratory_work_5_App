@@ -2,16 +2,29 @@ package org.example.program;
 
 import java.util.Objects;
 
-
+/**
+ * Класс для инициализации координат
+ * @author Pwsha
+ * @version v1.3
+ */
 public class Coordinates {
+    /** Поле x */
     private Float x; // Максимальное значение: 741, не null
+    /** Поле y */
     private long y; // > -938
 
+    /**
+     * Конструктор со всеми значениями
+     * @param builder
+     */
     private Coordinates(Builder builder) {
         this.x = builder.x;
         this.y = builder.y;
     }
 
+    /**
+     * Класс Билдер для построения конструкторов
+     */
     public static class Builder {
         private Float x;
         private long y;
@@ -27,8 +40,11 @@ public class Coordinates {
         }
 
         public Coordinates build() {
-            if (x == null || x > 741) {
-                throw new IllegalArgumentException("x должен быть <= 741 и не null");
+            if (x == null) {
+                throw new IllegalArgumentException("x должен быть не null");
+            }
+            if (x > 741) {
+                throw new IllegalArgumentException("x должен быть <= 741");
             }
             if (y <= -938) {
                 throw new IllegalArgumentException("y должен быть > -938");
@@ -37,31 +53,26 @@ public class Coordinates {
         }
     }
 
+    /**
+     * Функция получения значения поля {@link Coordinates#x}
+     * @return x
+     */
     public Float getX() {
         return x;
     }
-//
-//    public void setX(Float x) {
-//        if (x == null) {
-//            throw new IllegalArgumentException("x не может быть null");
-//        }
-//        if (x > 741) {
-//            throw new IllegalArgumentException("x должно быть <= 741");
-//        }
-//        this.x = x;
-//    }
-//
+
+    /**
+     * Функция получения значения поля {@link Coordinates#y}
+     * @return y
+     */
     public long getY() {
         return y;
     }
-//
-//    public void setY(long y) {
-//        if (y <= -938) {
-//            throw new IllegalArgumentException("y должно быть > -938");
-//        }
-//        this.y = y;
-//    }
 
+    /**
+     * Метод проверки значений
+     * @return true/false
+     */
     public boolean isValid() {
         return x != null && x <= 741 && y > -938;
     }

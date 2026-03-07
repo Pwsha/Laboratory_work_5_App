@@ -6,9 +6,18 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Scanner;
 
+/**
+ * Класс команды info
+ * @author Pwsha
+ * @version v1.3
+ */
 public class InfoCommand implements Command {
     private final LocalDateTime initializationDate;
 
+    /**
+     * Конструктор со значением даты
+     * @param initializationDate
+     */
     public InfoCommand(LocalDateTime initializationDate) {
         this.initializationDate = initializationDate;
     }

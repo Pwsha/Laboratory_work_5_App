@@ -5,6 +5,11 @@ import org.example.program.StudyGroup;
 import java.util.HashSet;
 import java.util.Scanner;
 
+/**
+ * Класс команды отображения коллекции
+ * @author Pwsha
+ * @version v1.3
+ */
 public class ShowCommand implements Command {
 
     @Override

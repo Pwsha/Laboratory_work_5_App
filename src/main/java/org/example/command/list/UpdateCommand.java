@@ -8,6 +8,11 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Scanner;
 
+/**
+ * Класс команды обновления элемента по id
+ * @author Pwsha
+ * @version v1.3
+ */
 public class UpdateCommand implements Command {
 
     @Override
@@ -340,5 +345,5 @@ public class UpdateCommand implements Command {
     @Override
     public String getSyntax() {
         return "update id";
-    }
+}
 }

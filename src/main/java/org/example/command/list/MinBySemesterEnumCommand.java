@@ -7,7 +7,11 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Scanner;
 
-
+/**
+ * Класс команды для поиска объекта с минимальным семестром
+ * @author Pwsha
+ * @version v1.3
+ */
 public class MinBySemesterEnumCommand implements Command {
 
     @Override

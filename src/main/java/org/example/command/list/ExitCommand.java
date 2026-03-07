@@ -5,7 +5,11 @@ import org.example.program.StudyGroup;
 import java.util.HashSet;
 import java.util.Scanner;
 
-
+/**
+ * Класс команды выхода из приложения
+ * @author Pwsha
+ * @version v1.3
+ */
 public class ExitCommand implements Command {
 
     @Override

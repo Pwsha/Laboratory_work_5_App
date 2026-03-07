@@ -6,17 +6,33 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+/**
+ * Класс парсера csv файла
+ * @author Pwsha
+ * @version v1.3
+ */
 public class StudyGroupCsvParser {
 
+    /** Поле файла */
     private final String filename;
+    /** Поле заголовка */
     private static final String HEADER = "id,name,coordinates_x,coordinates_y,creationDate,studentsCount,expelledStudents,formOfEducation,semesterEnum,groupAdmin_name,groupAdmin_birthday,groupAdmin_weight,groupAdmin_passportID,groupAdmin_location_x,groupAdmin_location_y,groupAdmin_location_z";
+    /** Поле даты */
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-
+    /**
+     * Конструктор со всеми значениями
+     * @param filename - файл
+     */
     public StudyGroupCsvParser(String filename) {
         this.filename = filename;
     }
 
+    /**
+     * Метод загрузки файла и его проверки
+     * @return collection
+     * @throws IOException
+     */
     public HashSet<StudyGroup> loadFromFile() throws IOException {
         HashSet<StudyGroup> collection = new HashSet<>();
         File file = new File(filename);
@@ -55,6 +71,11 @@ public class StudyGroupCsvParser {
         return collection;
     }
 
+    /**
+     * Метод для команды сохранения данных в файл
+     * @param collection
+     * @throws IOException
+     */
     public void saveToFile(HashSet<StudyGroup> collection) throws IOException {
         // Проверяем, можно ли писать в файл
         File file = new File(filename);
@@ -76,12 +97,20 @@ public class StudyGroupCsvParser {
         return file.exists() && file.canRead();
     }
 
+    /**
+     * Метод создания пустого файла
+     * @throws IOException
+     */
     public void createEmptyFile() throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             writer.println(HEADER);
         }
     }
 
+    /**
+     * Функция получения значения поля {@link StudyGroupCsvParser#filename}
+     * @return filename
+     */
     public String getFilename() {
         return filename;
     }

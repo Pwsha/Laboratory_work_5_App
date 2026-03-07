@@ -6,6 +6,11 @@ import org.example.program.StudyGroup;
 import java.util.HashSet;
 import java.util.Scanner;
 
+/**
+ * Класс команды добавления объекта с большим id
+ * @author Pwsha
+ * @version v1.3
+ */
 public class AddIfMaxCommand implements Command {
 
     @Override

@@ -6,10 +6,9 @@ import java.util.HashSet;
 import java.util.Scanner;
 
 /**
- * Команда для удаления элемента по studentsCount.
- *
- * @author Team
- * @version 1.0
+ * Команда для удаления элемента по количеству студентов.
+ * @author Pwsha
+ * @version v1.3
  */
 public class RemoveAnyByStudentsCountCommand implements Command {
 

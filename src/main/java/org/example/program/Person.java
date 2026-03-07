@@ -3,13 +3,27 @@ package org.example.program;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * Класс для инициализации админа
+ * @author Pwsha
+ * @version v1.3
+ */
 public class Person {
+    /** Поле имени*/
     private String name; // Не null, не пустое
+    /** Поле дня рождения */
     private Date birthday; // Может быть null
+    /** Поле веса */
     private Integer weight; // Не null, >0
+    /** Поле id паспорта */
     private String passportID; // Длина <= 20, не null
+    /** Поле локации */
     private Location location; // Может быть null
 
+    /**
+     * Конструктор со всеми значениями
+     * @param builder
+     */
     private Person(Builder builder) {
         this.name = builder.name;
         this.birthday = builder.birthday;
@@ -17,6 +31,10 @@ public class Person {
         this.passportID = builder.passportID;
         this.location = builder.location;
     }
+
+    /**
+     * Класс Билдер для построения конструкторов
+     */
     public static class Builder {
         private String name;
         private Date birthday;
@@ -56,65 +74,56 @@ public class Person {
             if (weight == null || weight <= 0) {
                 throw new IllegalArgumentException("weight должен быть > 0");
             }
-            if (passportID == null || passportID.length() > 20) {
-                throw new IllegalArgumentException("passportID должен быть не null и <= 20 символов");
+            if (passportID == null) {
+                throw new IllegalArgumentException("passportID должен быть не null");
+            }
+            if (passportID.length() > 20) {
+                throw new IllegalArgumentException("passportID должен быть не менее 20 символов");
             }
             return new Person(this);
         }
     }
 
+    /**
+     * Функция получения значения поля {@link Person#name}
+     * @return name
+     */
     public String getName() {
         return name;
     }
-//
-//    public void setName(String name) {
-//        if (name == null || name.trim().isEmpty()) {
-//            throw new IllegalArgumentException("name не может быть пустым");
-//        }
-//        this.name = name;
-//    }
-//
+    /**
+     * Функция получения значения поля {@link Person#birthday}
+     * @return birthday
+     */
     public Date getBirthday() {
         return birthday;
     }
-//
-//    public void setBirthday(Date birthday) {
-//        this.birthday = birthday;
-//    }
-//
+    /**
+     * Функция получения значения поля {@link Person#weight}
+     * @return weight
+     */
     public Integer getWeight() {
         return weight;
     }
-//
-//    public void setWeight(Integer weight) {
-//        if (weight == null || weight <= 0) {
-//            throw new IllegalArgumentException("weight должен быть > 0");
-//        }
-//        this.weight = weight;
-//    }
-
+    /**
+     * Функция получения значения поля {@link Person#passportID}
+     * @return passportID
+     */
     public String getPassportID() {
         return passportID;
     }
-//
-//    public void setPassportID(String passportID) {
-//        if (passportID == null) {
-//            throw new IllegalArgumentException("passportID не может быть null");
-//        }
-//        if (passportID.length() > 20) {
-//            throw new IllegalArgumentException("длина passportID не должна превышать 20");
-//        }
-//        this.passportID = passportID;
-//    }
-//
+    /**
+     * Функция получения значения поля {@link Person#location}
+     * @return location
+     */
     public Location getLocation() {
         return location;
     }
-//
-//    public void setLocation(Location location) {
-//        this.location = location;
-//    }
 
+    /**
+     * Метод проверки значений
+     * @return true/false
+     */
     public boolean isValid() {
         try {
             return name != null && !name.trim().isEmpty() &&

@@ -2,11 +2,20 @@ package org.example.command;
 
 import org.example.program.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.*;
 
+/**
+ * Вспомогательный класс для прочтения данных с клавиатуры
+ * @author Pwsha
+ * @version v1.3
+ */
 public class CommandHelper {
 
+    /**
+     * Метод для создания id
+     * @param collection
+     * @return id
+     */
     public static Long generateId(HashSet<StudyGroup> collection) {
         // Создаем множество существующих ID для быстрого поиска
         Set<Long> existingIds = new HashSet<>();
@@ -30,6 +39,11 @@ public class CommandHelper {
         return System.nanoTime() + random.nextInt(1000000);
     }
 
+    /**
+     * Метод для прочтения студенческой группы с клавиатуры
+     * @param scanner
+     * @param collection
+     */
     public static StudyGroup readStudyGroup(Scanner scanner, HashSet<StudyGroup> collection) {
         System.out.println("Введите данные группы:");
 
@@ -104,6 +118,10 @@ public class CommandHelper {
                 .build();
     }
 
+    /**
+     * Метод для прочтения координат с клавиатуры
+     * @param scanner
+     */
     private static Coordinates readCoordinates(Scanner scanner) {
         Float x = null;
         while (true) {
@@ -139,6 +157,10 @@ public class CommandHelper {
                 .build();
     }
 
+    /**
+     * Метод для прочтения администратора с клавиатуры
+     * @param scanner
+     */
     private static Person readPerson(Scanner scanner) {
         System.out.println("  Данные администратора:");
 
@@ -207,6 +229,10 @@ public class CommandHelper {
                 .build();
     }
 
+    /**
+     * Метод для прочтения локации с клавиатуры
+     * @param scanner
+     */
     private static Location readLocation(Scanner scanner) {
         System.out.println("    Местоположение:");
 
@@ -247,6 +273,13 @@ public class CommandHelper {
                 .build();
     }
 
+    /**
+     * Метод для прочтения выбора из перечислений с клавиатуры
+     * @param scanner
+     * @param enumClass
+     * @param description
+     * @param <T>
+     */
     public static <T extends Enum<T>> T readEnum(Scanner scanner, Class<T> enumClass, String description) {
         T[] constants = enumClass.getEnumConstants();
         System.out.println("  Доступные варианты " + description + ":");

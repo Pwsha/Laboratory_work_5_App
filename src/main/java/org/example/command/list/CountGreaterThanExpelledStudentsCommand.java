@@ -5,6 +5,11 @@ import org.example.program.StudyGroup;
 import java.util.HashSet;
 import java.util.Scanner;
 
+/**
+ * Класс команды подсчёта отчисленных студентов
+ * @author Pwsha
+ * @version v1.3
+ */
 public class CountGreaterThanExpelledStudentsCommand implements Command {
 
     @Override

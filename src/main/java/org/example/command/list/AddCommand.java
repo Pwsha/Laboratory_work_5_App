@@ -6,6 +6,11 @@ import org.example.program.StudyGroup;
 import java.util.HashSet;
 import java.util.Scanner;
 
+/**
+ * Класс команды добавления объекта
+ * @author Pwsha
+ * @version v1.3
+ */
 public class AddCommand implements Command {
 
     @Override

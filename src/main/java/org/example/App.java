@@ -9,14 +9,29 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * Главный класс приложения
+ * @author Pwsha
+ * @version v1.3
+ */
 public class App {
+    /** Поле коллекции */
     private final HashSet<StudyGroup> collection;
+    /** Поле даты */
     private final LocalDateTime initializationDate;
+    /** Поле парсера */
     private final StudyGroupCsvParser csvParser;
+    /** Поле сканера */
     private final Scanner scanner;
+    /** Поле для команды история */
     private final LinkedList<String> commandHistory;
+    /** Поле команд*/
     private final Map<String, Command> commands;
 
+    /**
+     * Конструктор со всеми значениями
+     * @param filename - файл
+     */
     public App(String filename) {
         this.collection = new HashSet<>();
         this.initializationDate = LocalDateTime.now();
@@ -28,6 +43,9 @@ public class App {
         initializeCommands();
     }
 
+    /**
+     * Метод инициализации команд
+     */
     private void initializeCommands() {
         Map<String, Command> commandMap = Map.ofEntries(
                 Map.entry("info", new InfoCommand(initializationDate)),
@@ -51,7 +69,9 @@ public class App {
 
         commands.put("help", new HelpCommand(commands));
     }
-
+    /**
+     * Метод загрузки коллекции из файла
+     */
     private void loadCollection() {
         try {
             if (!csvParser.isFileAccessible()) {
@@ -84,7 +104,10 @@ public class App {
         }
     }
 
-
+    /**
+     * Метод для удаления команд из истории
+     * @param command
+     */
     private void addToHistory(String command) {
         commandHistory.add(command);
         if (commandHistory.size() > 5) {
@@ -92,7 +115,9 @@ public class App {
         }
     }
 
-
+    /**
+     * Метод запуска
+     */
     public void run() {
         loadCollection();
         System.out.println("Программа запущена. Введите 'help' для справки.");
@@ -129,7 +154,6 @@ public class App {
 
         scanner.close();
     }
-
 
     public static void main(String[] args) {
         if (args.length == 0) {

@@ -3,17 +3,35 @@ package org.example.program;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * Класс для инициализации студенческой группы
+ * @author Pwsha
+ * @version v1.3
+ */
 public class StudyGroup implements Comparable<StudyGroup> {
-    private Long id; // Поле не может быть null, >0, уникальное, генерируется автоматически
-    private String name; // Поле не может быть null, не пустое
-    private Coordinates coordinates; // Поле не может быть null
-    private LocalDateTime creationDate; // Поле не может быть null, генерируется автоматически
-    private long studentsCount; // >0
-    private int expelledStudents; // >0
-    private FormOfEducation formOfEducation; // Поле не может быть null
-    private Semester semesterEnum; // Поле не может быть null
-    private Person groupAdmin; // Может быть null
+    /** Поле id */
+    private final Long id; // Поле не может быть null, >0, уникальное, генерируется автоматически
+    /** Поле имени */
+    private final String name; // Поле не может быть null, не пустое
+    /** Поле координат */
+    private final Coordinates coordinates; // Поле не может быть null
+    /** Поле даты*/
+    private final LocalDateTime creationDate; // Поле не может быть null, генерируется автоматически
+    /** Поле количества студентов */
+    private final long studentsCount; // >0
+    /** Поле исключённых студентов */
+    private final int expelledStudents; // >0
+    /** Поле видом обучения */
+    private final FormOfEducation formOfEducation; // Поле не может быть null
+    /** Поле семестров */
+    private final Semester semesterEnum; // Поле не может быть null
+    /** Поле админа */
+    private final Person groupAdmin; // Может быть null
 
+    /**
+     * Конструктор со всеми значениями
+     * @param builder
+     */
     private StudyGroup(Builder builder) {
         this.id = builder.id;
         this.name = builder.name;
@@ -26,6 +44,9 @@ public class StudyGroup implements Comparable<StudyGroup> {
         this.groupAdmin = builder.groupAdmin;
     }
 
+    /**
+     * Класс Билдер для построения конструкторов
+     */
     public static class Builder {
         private Long id;
         private String name;
@@ -113,103 +134,82 @@ public class StudyGroup implements Comparable<StudyGroup> {
         }
     }
 
+    /**
+     * Функция получения значения поля {@link StudyGroup#id}
+     * @return id
+     */
     public Long getId() {
         return id;
     }
-//
-//    public void setId(Long id) {
-//        if (id == null || id <= 0) {
-//            throw new IllegalArgumentException("id должен быть > 0");
-//        }
-//        this.id = id;
-//    }
-//
+
+    /**
+     * Функция получения значения поля {@link StudyGroup#name}
+     * @return id
+     */
     public String getName() {
         return name;
     }
-//
-//    public void setName(String name) {
-//        if (name == null || name.trim().isEmpty()) {
-//            throw new IllegalArgumentException("name не может быть пустым");
-//        }
-//        this.name = name;
-//    }
-//
+
+    /**
+     * Функция получения значения поля {@link StudyGroup#coordinates}
+     * @return id
+     */
     public Coordinates getCoordinates() {
         return coordinates;
     }
-//
-//    public void setCoordinates(Coordinates coordinates) {
-//        if (coordinates == null) {
-//            throw new IllegalArgumentException("coordinates не может быть null");
-//        }
-//        this.coordinates = coordinates;
-//    }
-//
+
+    /**
+     * Функция получения значения поля {@link StudyGroup#creationDate}
+     * @return id
+     */
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
-//
-//    public void setCreationDate(LocalDateTime creationDate) {
-//        if (creationDate == null) {
-//            throw new IllegalArgumentException("creationDate не может быть null");
-//        }
-//        this.creationDate = creationDate;
-//    }
-//
+
+    /**
+     * Функция получения значения поля {@link StudyGroup#studentsCount}
+     * @return id
+     */
     public long getStudentsCount() {
         return studentsCount;
     }
-//
-//    public void setStudentsCount(long studentsCount) {
-//        if (studentsCount <= 0) {
-//            throw new IllegalArgumentException("studentsCount должен быть > 0");
-//        }
-//        this.studentsCount = studentsCount;
-//    }
-//
+
+    /**
+     * Функция получения значения поля {@link StudyGroup#expelledStudents}
+     * @return id
+     */
     public int getExpelledStudents() {
         return expelledStudents;
     }
-//
-//    public void setExpelledStudents(int expelledStudents) {
-//        if (expelledStudents <= 0) {
-//            throw new IllegalArgumentException("expelledStudents должен быть > 0");
-//        }
-//        this.expelledStudents = expelledStudents;
-//    }
-//
+
+    /**
+     * Функция получения значения поля {@link StudyGroup#formOfEducation}
+     * @return id
+     */
     public FormOfEducation getFormOfEducation() {
         return formOfEducation;
     }
-//
-//    public void setFormOfEducation(FormOfEducation formOfEducation) {
-//        if (formOfEducation == null) {
-//            throw new IllegalArgumentException("formOfEducation не может быть null");
-//        }
-//        this.formOfEducation = formOfEducation;
-//    }
-//
+
+    /**
+     * Функция получения значения поля {@link StudyGroup#semesterEnum}
+     * @return id
+     */
     public Semester getSemesterEnum() {
         return semesterEnum;
     }
-//
-//    public void setSemesterEnum(Semester semesterEnum) {
-//        if (semesterEnum == null) {
-//            throw new IllegalArgumentException("semesterEnum не может быть null");
-//        }
-//        this.semesterEnum = semesterEnum;
-//    }
-//
+
+    /**
+     * Функция получения значения поля {@link StudyGroup#groupAdmin}
+     * @return id
+     */
     public Person getGroupAdmin() {
         return groupAdmin;
     }
-//
-//    public void setGroupAdmin(Person groupAdmin) {
-//        this.groupAdmin = groupAdmin;
-//    }
 
-
+    /**
+     * Метод проверки значений
+     * @return true/false
+     */
     public boolean isValid() {
         try {
             return id != null && id > 0 &&
@@ -225,6 +225,11 @@ public class StudyGroup implements Comparable<StudyGroup> {
         }
     }
 
+    /**
+     * Метод сортировки по id
+     * @param other
+     * @return compareTo(id)
+     */
     @Override
     public int compareTo(StudyGroup other) {
         return this.id.compareTo(other.id);

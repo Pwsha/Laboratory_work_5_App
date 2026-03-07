@@ -2,17 +2,32 @@ package org.example.program;
 
 import java.util.Objects;
 
+/**
+ * Класс для инициализации локации
+ * @author Pwsha
+ * @version v1.3
+ */
 public class Location {
+    /** Поле x */
     private double x;
+    /** Поле y */
     private Double y; // Не null
+    /** Поле z */
     private Float z; // Не null
 
+    /**
+     * Конструктор со всеми значениями
+     * @param builder
+     */
     private Location(Builder builder) {
         this.x = builder.x;
         this.y = builder.y;
         this.z = builder.z;
     }
 
+    /**
+     * Класс Билдер для построения конструкторов
+     */
     public static class Builder {
         private double x;
         private Double y;
@@ -44,36 +59,34 @@ public class Location {
         }
     }
 
+    /**
+     * Функция получения значения поля {@link Location#x}
+     * @return x
+     */
     public double getX() {
         return x;
     }
-//
-//    public void setX(double x) {
-//        this.x = x;
-//    }
-//
+
+    /**
+     * Функция получения значения поля {@link Location#y}
+     * @return y
+     */
     public Double getY() {
         return y;
     }
-//
-//    public void setY(Double y) {
-//        if (y == null) {
-//            throw new IllegalArgumentException("y не может быть null");
-//        }
-//        this.y = y;
-//    }
-//
+
+    /**
+     * Функция получения значения поля {@link Location#z}
+     * @return z
+     */
     public Float getZ() {
         return z;
     }
-//
-//    public void setZ(Float z) {
-//        if (z == null) {
-//            throw new IllegalArgumentException("z не может быть null");
-//        }
-//        this.z = z;
-//    }
 
+    /**
+     * Метод проверки значений
+     * @return true/false
+     */
     public boolean isValid() {
         return y != null && z != null;
     }

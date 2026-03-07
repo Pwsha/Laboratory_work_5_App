@@ -6,6 +6,11 @@ import org.example.program.StudyGroup;
 import java.util.HashSet;
 import java.util.Scanner;
 
+/**
+ * Класс команды удаления элементов больше заданного
+ * @author Pwsha
+ * @version v1.3
+ */
 public class RemoveGreaterCommand implements Command {
 
     @Override

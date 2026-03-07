@@ -6,9 +6,18 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Scanner;
 
+/**
+ * Класс команды history
+ * @author Pwsha
+ * @version v1.3
+ */
 public class HistoryCommand implements Command {
     private final LinkedList<String> history;
 
+    /**
+     * Конструктор со значением истории
+     * @param history
+     */
     public HistoryCommand(LinkedList<String> history) {
         this.history = history;
     }

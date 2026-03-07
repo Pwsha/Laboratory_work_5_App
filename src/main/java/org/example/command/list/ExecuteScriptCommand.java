@@ -7,6 +7,11 @@ import java.io.FileNotFoundException;
 import java.util.HashSet;
 import java.util.Scanner;
 
+/**
+ * Класс команды вызова скрипта/файла
+ * @author Pwsha
+ * @version v1.3
+ */
 public class ExecuteScriptCommand implements Command {
 
     @Override
