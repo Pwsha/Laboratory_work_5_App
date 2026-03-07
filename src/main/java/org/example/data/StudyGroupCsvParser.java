@@ -6,34 +6,17 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-/**
- * Простой парсер для чтения и записи коллекции StudyGroup в CSV формате.
- * Использует встроенные классы Java (Scanner, PrintWriter) без внешних зависимостей.
- *
- * @author Team
- * @version 1.0
- */
 public class StudyGroupCsvParser {
 
     private final String filename;
     private static final String HEADER = "id,name,coordinates_x,coordinates_y,creationDate,studentsCount,expelledStudents,formOfEducation,semesterEnum,groupAdmin_name,groupAdmin_birthday,groupAdmin_weight,groupAdmin_passportID,groupAdmin_location_x,groupAdmin_location_y,groupAdmin_location_z";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-    /**
-     * Конструктор парсера.
-     *
-     * @param filename имя файла для чтения/записи
-     */
+
     public StudyGroupCsvParser(String filename) {
         this.filename = filename;
     }
 
-    /**
-     * Загружает коллекцию из CSV файла.
-     *
-     * @return HashSet с объектами StudyGroup
-     * @throws IOException если ошибка чтения файла
-     */
     public HashSet<StudyGroup> loadFromFile() throws IOException {
         HashSet<StudyGroup> collection = new HashSet<>();
         File file = new File(filename);
@@ -60,7 +43,7 @@ public class StudyGroupCsvParser {
 
                 try {
                     StudyGroup group = parseLine(line);
-                    if (group != null) {
+                    if (group != null && group.isValid()) {
                         collection.add(group);
                     }
                 } catch (Exception e) {
@@ -72,12 +55,6 @@ public class StudyGroupCsvParser {
         return collection;
     }
 
-    /**
-     * Сохраняет коллекцию в CSV файл.
-     *
-     * @param collection коллекция для сохранения
-     * @throws IOException если ошибка записи
-     */
     public void saveToFile(HashSet<StudyGroup> collection) throws IOException {
         // Проверяем, можно ли писать в файл
         File file = new File(filename);
@@ -94,19 +71,16 @@ public class StudyGroupCsvParser {
         }
     }
 
-
     public boolean isFileAccessible() {
         File file = new File(filename);
         return file.exists() && file.canRead();
     }
-
 
     public void createEmptyFile() throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             writer.println(HEADER);
         }
     }
-
 
     public String getFilename() {
         return filename;
@@ -119,66 +93,69 @@ public class StudyGroupCsvParser {
         }
 
         try {
-            StudyGroup group = new StudyGroup();
             int idx = 0;
 
             // id
-            group.setId(parseLong(parts[idx++]));
+            Long id = parseLong(parts[idx++]);
 
             // name
             String name = parts[idx++];
             if (name.isEmpty()) {
                 throw new IllegalArgumentException("name не может быть пустым");
             }
-            group.setName(name);
 
             // coordinates
-            Coordinates coords = new Coordinates();
-            coords.setX(parseFloat(parts[idx++]));
-            coords.setY(parseLong(parts[idx++]));
-            group.setCoordinates(coords);
+            Float x = parseFloat(parts[idx++]);
+            Long y = parseLong(parts[idx++]);
+            Coordinates coordinates = new Coordinates.Builder()
+                    .x(x)
+                    .y(y)
+                    .build();
 
             // creationDate
             String dateStr = parts[idx++];
-            if (dateStr.isEmpty()) {
-                group.setCreationDate(LocalDateTime.now());
-            } else {
-                group.setCreationDate(LocalDateTime.parse(dateStr, DATE_FORMATTER));
-            }
+            LocalDateTime creationDate = dateStr.isEmpty() ? LocalDateTime.now() :
+                    LocalDateTime.parse(dateStr, DATE_FORMATTER);
 
             // studentsCount
-            group.setStudentsCount(parseLong(parts[idx++]));
+            long studentsCount = parseLong(parts[idx++]);
 
             // expelledStudents
-            group.setExpelledStudents(parseInt(parts[idx++]));
+            int expelledStudents = parseInt(parts[idx++]);
 
             // formOfEducation
             String formStr = parts[idx++];
-            if (formStr.isEmpty()) {
-                throw new IllegalArgumentException("formOfEducation не может быть пустым");
-            }
-            group.setFormOfEducation(FormOfEducation.valueOf(formStr));
+            FormOfEducation formOfEducation = FormOfEducation.valueOf(formStr);
 
             // semesterEnum
             String semesterStr = parts[idx++];
-            if (semesterStr.isEmpty()) {
-                throw new IllegalArgumentException("semesterEnum не может быть пустым");
-            }
-            group.setSemesterEnum(Semester.valueOf(semesterStr));
+            Semester semester = Semester.valueOf(semesterStr);
 
             // groupAdmin (если есть поля)
+            Person groupAdmin = null;
             if (parts.length > idx && !parts[idx].isEmpty()) {
-                group.setGroupAdmin(parsePerson(parts, idx));
+                groupAdmin = parsePerson(parts, idx);
             }
 
-            return group;
+            // Создаем StudyGroup через Builder
+            return new StudyGroup.Builder()
+                    .id(id)
+                    .name(name)
+                    .coordinates(coordinates)
+                    .creationDate(creationDate)
+                    .studentsCount(studentsCount)
+                    .expelledStudents(expelledStudents)
+                    .formOfEducation(formOfEducation)
+                    .semesterEnum(semester)
+                    .groupAdmin(groupAdmin)
+                    .build();
+
         } catch (Exception e) {
             throw new IllegalArgumentException("Ошибка парсинга: " + e.getMessage(), e);
         }
     }
 
     private Person parsePerson(String[] parts, int startIdx) {
-        Person person = new Person();
         int idx = startIdx;
 
         try {
@@ -187,52 +164,69 @@ public class StudyGroupCsvParser {
             if (name.isEmpty()) {
                 throw new IllegalArgumentException("Имя администратора не может быть пустым");
             }
-            person.setName(name);
 
             // birthday (может быть пустым)
+            Date birthday = null;
             if (idx < parts.length && !parts[idx].isEmpty()) {
                 long birthdayMillis = parseLong(parts[idx]);
-                person.setBirthday(new Date(birthdayMillis));
+                birthday = new Date(birthdayMillis);
             }
             idx++;
 
             // weight
+            Integer weight = null;
             if (idx < parts.length && !parts[idx].isEmpty()) {
-                person.setWeight(parseInt(parts[idx]));
+                weight = parseInt(parts[idx]);
             }
             idx++;
 
             // passportID
+            String passportID = null;
             if (idx < parts.length && !parts[idx].isEmpty()) {
-                person.setPassportID(parts[idx]);
+                passportID = parts[idx];
             }
             idx++;
 
             // location (если есть поля)
+            Location location = null;
             if (parts.length > idx + 2) {
-                Location location = new Location();
+                Double locY = null;
+                Float locZ = null;
 
+                double locX = 0;
                 if (!parts[idx].isEmpty()) {
-                    location.setX(parseDouble(parts[idx]));
+                    locX = parseDouble(parts[idx]);
                 }
                 idx++;
 
                 if (!parts[idx].isEmpty()) {
-                    location.setY(parseDouble(parts[idx]));
+                    locY = parseDouble(parts[idx]);
                 }
                 idx++;
 
                 if (!parts[idx].isEmpty()) {
-                    location.setZ(parseFloat(parts[idx]));
+                    locZ = parseFloat(parts[idx]);
                 }
 
-                // Устанавливаем location только если есть хотя бы одно поле
-                if (location.getY() != null && location.getZ() != null) {
-                    person.setLocation(location);
+                // Создаем location только если есть обязательные поля
+                if (locY != null && locZ != null) {
+                    location = new Location.Builder()
+                            .x(locX)
+                            .y(locY)
+                            .z(locZ)
+                            .build();
                 }
             }
 
-            return person;
+            // Создаем Person через Builder
+            return new Person.Builder()
+                    .name(name)
+                    .birthday(birthday)
+                    .weight(weight)
+                    .passportID(passportID)
+                    .location(location)
+                    .build();
+
         } catch (Exception e) {
             System.err.println("Ошибка парсинга Person: " + e.getMessage());
             return null;
@@ -287,7 +281,6 @@ public class StudyGroupCsvParser {
         return value;
     }
 
-
     private Long parseLong(String str) {
         if (str == null || str.trim().isEmpty()) return 0L;
         try {
@@ -305,7 +298,6 @@ public class StudyGroupCsvParser {
             return 0;
         }
     }
-
 
     private Float parseFloat(String str) {
         if (str == null || str.trim().isEmpty()) return 0f;

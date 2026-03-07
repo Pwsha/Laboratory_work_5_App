@@ -29,39 +29,25 @@ public class App {
     }
 
     private void initializeCommands() {
-        // Создаем команды
-        Command info = new InfoCommand(initializationDate);
-        Command show = new ShowCommand();
-        Command add = new AddCommand();
-        Command update = new UpdateCommand();
-        Command removeById = new RemoveByIdCommand();
-        Command clear = new ClearCommand();
-        Command save = new SaveCommand(csvParser);
-        Command exit = new ExitCommand();
-        Command addIfMax = new AddIfMaxCommand();
-        Command removeGreater = new RemoveGreaterCommand();
-        Command history = new HistoryCommand(commandHistory);
-        Command removeByStudentsCount = new RemoveAnyByStudentsCountCommand();
-        Command minBySemester = new MinBySemesterEnumCommand();
-        Command countGreater = new CountGreaterThanExpelledStudentsCommand();
-        Command executeScript = new ExecuteScriptCommand();
+        Map<String, Command> commandMap = Map.ofEntries(
+                Map.entry("info", new InfoCommand(initializationDate)),
+                Map.entry("show", new ShowCommand()),
+                Map.entry("add", new AddCommand()),
+                Map.entry("update", new UpdateCommand()),
+                Map.entry("remove_by_id", new RemoveByIdCommand()),
+                Map.entry("clear", new ClearCommand()),
+                Map.entry("save", new SaveCommand(csvParser)),
+                Map.entry("exit", new ExitCommand()),
+                Map.entry("add_if_max", new AddIfMaxCommand()),
+                Map.entry("remove_greater", new RemoveGreaterCommand()),
+                Map.entry("history", new HistoryCommand(commandHistory)),
+                Map.entry("remove_any_by_students_count", new RemoveAnyByStudentsCountCommand()),
+                Map.entry("min_by_semester_enum", new MinBySemesterEnumCommand()),
+                Map.entry("count_greater_than_expelled_students", new CountGreaterThanExpelledStudentsCommand()),
+                Map.entry("execute_script", new ExecuteScriptCommand())
+        );
 
-        // Регистрируем команды
-        commands.put(info.getName(), info);
-        commands.put(show.getName(), show);
-        commands.put(add.getName(), add);
-        commands.put(update.getName(), update);
-        commands.put(removeById.getName(), removeById);
-        commands.put(clear.getName(), clear);
-        commands.put(save.getName(), save);
-        commands.put(exit.getName(), exit);
-        commands.put(addIfMax.getName(), addIfMax);
-        commands.put(removeGreater.getName(), removeGreater);
-        commands.put(history.getName(), history);
-        commands.put(removeByStudentsCount.getName(), removeByStudentsCount);
-        commands.put(minBySemester.getName(), minBySemester);
-        commands.put(countGreater.getName(), countGreater);
-        commands.put(executeScript.getName(), executeScript);
+        commands.putAll(commandMap);
 
         commands.put("help", new HelpCommand(commands));
     }

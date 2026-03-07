@@ -2,51 +2,58 @@ package org.example.command;
 
 import org.example.program.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.*;
-
 
 public class CommandHelper {
 
     public static Long generateId(HashSet<StudyGroup> collection) {
+        // Создаем множество существующих ID для быстрого поиска
+        Set<Long> existingIds = new HashSet<>();
+        for (StudyGroup group : collection) {
+            existingIds.add(group.getId());
+        }
+
         Random random = new Random();
-        long id;
-        do {
-            id = System.currentTimeMillis() + random.nextInt(1000);
-            final long currentId = id;
-            if (collection.stream().noneMatch(g -> g.getId().equals(currentId))) {
-                return currentId;
+        int maxAttempts = 10000;
+        int attempts = 0;
+
+        while (attempts < maxAttempts) {
+            long id = System.currentTimeMillis() + random.nextInt(1000);
+            if (!existingIds.contains(id)) {
+                return id;
             }
-        } while (true);
+            attempts++;
+        }
+
+        // Если не нашли уникальный ID, используем более сложную комбинацию
+        return System.nanoTime() + random.nextInt(1000000);
     }
 
     public static StudyGroup readStudyGroup(Scanner scanner, HashSet<StudyGroup> collection) {
-        StudyGroup group = new StudyGroup();
-        group.setId(generateId(collection));
-        group.setCreationDate(LocalDateTime.now());
-
         System.out.println("Введите данные группы:");
 
         // name
+        String name = null;
         while (true) {
             System.out.print("  Название группы: ");
-            String name = scanner.nextLine().trim();
+            name = scanner.nextLine().trim();
             if (!name.isEmpty()) {
-                group.setName(name);
                 break;
             }
             System.out.println("  Ошибка: название не может быть пустым");
         }
 
         // coordinates
-        group.setCoordinates(readCoordinates(scanner));
+        Coordinates coordinates = readCoordinates(scanner);
 
         // studentsCount
+        long studentsCount = 0;
         while (true) {
             System.out.print("  Количество студентов (>0): ");
             try {
-                long count = Long.parseLong(scanner.nextLine().trim());
-                if (count > 0) {
-                    group.setStudentsCount(count);
+                studentsCount = Long.parseLong(scanner.nextLine().trim());
+                if (studentsCount > 0) {
                     break;
                 }
                 System.out.println("  Ошибка: должно быть >0");
@@ -56,12 +63,12 @@ public class CommandHelper {
         }
 
         // expelledStudents
+        int expelledStudents = 0;
         while (true) {
             System.out.print("  Количество отчисленных (>0): ");
             try {
-                int count = Integer.parseInt(scanner.nextLine().trim());
-                if (count > 0) {
-                    group.setExpelledStudents(count);
+                expelledStudents = Integer.parseInt(scanner.nextLine().trim());
+                if (expelledStudents > 0) {
                     break;
                 }
                 System.out.println("  Ошибка: должно быть >0");
@@ -71,32 +78,39 @@ public class CommandHelper {
         }
 
         // formOfEducation
-        group.setFormOfEducation(readEnum(scanner, FormOfEducation.class, "форму обучения"));
+        FormOfEducation formOfEducation = readEnum(scanner, FormOfEducation.class, "форму обучения");
 
         // semesterEnum
-        group.setSemesterEnum(readEnum(scanner, Semester.class, "семестр"));
+        Semester semester = readEnum(scanner, Semester.class, "семестр");
 
         // groupAdmin
+        Person admin = null;
         System.out.print("  Добавить администратора? (y/n): ");
         if (scanner.nextLine().trim().toLowerCase().startsWith("y")) {
-            group.setGroupAdmin(readPerson(scanner));
+            admin = readPerson(scanner);
         }
 
-        return group;
+        // Создаем объект через Builder
+        return new StudyGroup.Builder()
+                .id(generateId(collection))
+                .name(name)
+                .coordinates(coordinates)
+                .creationDate(LocalDateTime.now())
+                .studentsCount(studentsCount)
+                .expelledStudents(expelledStudents)
+                .formOfEducation(formOfEducation)
+                .semesterEnum(semester)
+                .groupAdmin(admin)
+                .build();
     }
 
-    /**
-     * Читает Coordinates.
-     */
     private static Coordinates readCoordinates(Scanner scanner) {
-        Coordinates coords = new Coordinates();
-
+        Float x = null;
         while (true) {
             System.out.print("  Координата x (<=741): ");
             try {
-                Float x = Float.parseFloat(scanner.nextLine().trim());
+                x = Float.parseFloat(scanner.nextLine().trim());
                 if (x <= 741) {
-                    coords.setX(x);
                     break;
                 }
                 System.out.println("  Ошибка: x <= 741");
@@ -105,12 +119,12 @@ public class CommandHelper {
             }
         }
 
+        long y = 0;
         while (true) {
             System.out.print("  Координата y (>-938): ");
             try {
-                long y = Long.parseLong(scanner.nextLine().trim());
+                y = Long.parseLong(scanner.nextLine().trim());
                 if (y > -938) {
-                    coords.setY(y);
                     break;
                 }
                 System.out.println("  Ошибка: y > -938");
@@ -119,43 +133,45 @@ public class CommandHelper {
             }
         }
 
-        return coords;
+        return new Coordinates.Builder()
+                .x(x)
+                .y(y)
+                .build();
     }
 
-    /**
-     * Читает Person.
-     */
     private static Person readPerson(Scanner scanner) {
-        Person person = new Person();
-
         System.out.println("  Данные администратора:");
 
+        // name
+        String name = null;
         while (true) {
             System.out.print("    Имя: ");
-            String name = scanner.nextLine().trim();
+            name = scanner.nextLine().trim();
             if (!name.isEmpty()) {
-                person.setName(name);
                 break;
             }
             System.out.println("    Ошибка: имя не может быть пустым");
         }
 
+        // birthday
+        Date birthday = null;
         System.out.print("    Дата рождения (yyyy-MM-dd) или пусто: ");
         String dateStr = scanner.nextLine().trim();
         if (!dateStr.isEmpty()) {
             try {
-                person.setBirthday(java.sql.Date.valueOf(dateStr));
-            } catch (Exception e) {
+                birthday = java.sql.Date.valueOf(dateStr);
+            } catch (IllegalArgumentException e) {
                 System.out.println("    Неверный формат, поле не будет установлено");
             }
         }
 
+        // weight
+        Integer weight = null;
         while (true) {
             System.out.print("    Вес (>0): ");
             try {
-                Integer weight = Integer.parseInt(scanner.nextLine().trim());
+                weight = Integer.parseInt(scanner.nextLine().trim());
                 if (weight > 0) {
-                    person.setWeight(weight);
                     break;
                 }
                 System.out.println("    Ошибка: вес >0");
@@ -164,61 +180,71 @@ public class CommandHelper {
             }
         }
 
+        // passportID
+        String passportID = null;
         while (true) {
             System.out.print("    Номер паспорта (<=20 символов): ");
-            String passport = scanner.nextLine().trim();
-            if (!passport.isEmpty() && passport.length() <= 20) {
-                person.setPassportID(passport);
+            passportID = scanner.nextLine().trim();
+            if (!passportID.isEmpty() && passportID.length() <= 20) {
                 break;
             }
             System.out.println("    Ошибка: от 1 до 20 символов");
         }
 
+        // location
+        Location location = null;
         System.out.print("    Добавить местоположение? (y/n): ");
         if (scanner.nextLine().trim().toLowerCase().startsWith("y")) {
-            person.setLocation(readLocation(scanner));
+            location = readLocation(scanner);
         }
 
-        return person;
+        return new Person.Builder()
+                .name(name)
+                .birthday(birthday)
+                .weight(weight)
+                .passportID(passportID)
+                .location(location)
+                .build();
     }
 
-    /**
-     * Читает Location.
-     */
     private static Location readLocation(Scanner scanner) {
-        Location loc = new Location();
-
         System.out.println("    Местоположение:");
 
+        double x = 0;
         System.out.print("      x: ");
         try {
-            loc.setX(Double.parseDouble(scanner.nextLine().trim()));
+            x = Double.parseDouble(scanner.nextLine().trim());
         } catch (NumberFormatException e) {
             System.out.println("      Неверный формат, установлено 0");
-            loc.setX(0);
         }
 
+        Double y = null;
         while (true) {
             System.out.print("      y (не null): ");
             try {
-                loc.setY(Double.parseDouble(scanner.nextLine().trim()));
+                y = Double.parseDouble(scanner.nextLine().trim());
                 break;
             } catch (NumberFormatException e) {
                 System.out.println("      Ошибка: введите число");
             }
         }
 
+        Float z = null;
         while (true) {
             System.out.print("      z (не null): ");
             try {
-                loc.setZ(Float.parseFloat(scanner.nextLine().trim()));
+                z = Float.parseFloat(scanner.nextLine().trim());
                 break;
             } catch (NumberFormatException e) {
                 System.out.println("      Ошибка: введите число");
             }
         }
 
-        return loc;
+        return new Location.Builder()
+                .x(x)
+                .y(y)
+                .z(z)
+                .build();
     }
 
     public static <T extends Enum<T>> T readEnum(Scanner scanner, Class<T> enumClass, String description) {

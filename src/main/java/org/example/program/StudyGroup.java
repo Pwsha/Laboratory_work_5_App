@@ -14,108 +14,202 @@ public class StudyGroup implements Comparable<StudyGroup> {
     private Semester semesterEnum; // Поле не может быть null
     private Person groupAdmin; // Может быть null
 
-    public StudyGroup() {
+    private StudyGroup(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.coordinates = builder.coordinates;
+        this.creationDate = builder.creationDate;
+        this.studentsCount = builder.studentsCount;
+        this.expelledStudents = builder.expelledStudents;
+        this.formOfEducation = builder.formOfEducation;
+        this.semesterEnum = builder.semesterEnum;
+        this.groupAdmin = builder.groupAdmin;
+    }
+
+    public static class Builder {
+        private Long id;
+        private String name;
+        private Coordinates coordinates;
+        private LocalDateTime creationDate;
+        private long studentsCount;
+        private int expelledStudents;
+        private FormOfEducation formOfEducation;
+        private Semester semesterEnum;
+        private Person groupAdmin;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder coordinates(Coordinates coordinates) {
+            this.coordinates = coordinates;
+            return this;
+        }
+
+        public Builder creationDate(LocalDateTime creationDate) {
+            this.creationDate = creationDate;
+            return this;
+        }
+
+        public Builder studentsCount(long studentsCount) {
+            this.studentsCount = studentsCount;
+            return this;
+        }
+
+        public Builder expelledStudents(int expelledStudents) {
+            this.expelledStudents = expelledStudents;
+            return this;
+        }
+
+        public Builder formOfEducation(FormOfEducation formOfEducation) {
+            this.formOfEducation = formOfEducation;
+            return this;
+        }
+
+        public Builder semesterEnum(Semester semesterEnum) {
+            this.semesterEnum = semesterEnum;
+            return this;
+        }
+
+        public Builder groupAdmin(Person groupAdmin) {
+            this.groupAdmin = groupAdmin;
+            return this;
+        }
+
+        public StudyGroup build() {
+            // Валидация
+            if (id == null || id <= 0) {
+                throw new IllegalArgumentException("id должен быть > 0");
+            }
+            if (name == null || name.trim().isEmpty()) {
+                throw new IllegalArgumentException("name не может быть пустым");
+            }
+            if (coordinates == null) {
+                throw new IllegalArgumentException("coordinates не может быть null");
+            }
+            if (creationDate == null) {
+                this.creationDate = LocalDateTime.now();
+            }
+            if (studentsCount <= 0) {
+                throw new IllegalArgumentException("studentsCount должен быть > 0");
+            }
+            if (expelledStudents <= 0) {
+                throw new IllegalArgumentException("expelledStudents должен быть > 0");
+            }
+            if (formOfEducation == null) {
+                throw new IllegalArgumentException("formOfEducation не может быть null");
+            }
+            if (semesterEnum == null) {
+                throw new IllegalArgumentException("semesterEnum не может быть null");
+            }
+
+            return new StudyGroup(this);
+        }
     }
 
     public Long getId() {
         return id;
     }
-
-    public void setId(Long id) {
-        if (id == null || id <= 0) {
-            throw new IllegalArgumentException("id должен быть > 0");
-        }
-        this.id = id;
-    }
-
+//
+//    public void setId(Long id) {
+//        if (id == null || id <= 0) {
+//            throw new IllegalArgumentException("id должен быть > 0");
+//        }
+//        this.id = id;
+//    }
+//
     public String getName() {
         return name;
     }
-
-    public void setName(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("name не может быть пустым");
-        }
-        this.name = name;
-    }
-
+//
+//    public void setName(String name) {
+//        if (name == null || name.trim().isEmpty()) {
+//            throw new IllegalArgumentException("name не может быть пустым");
+//        }
+//        this.name = name;
+//    }
+//
     public Coordinates getCoordinates() {
         return coordinates;
     }
-
-    public void setCoordinates(Coordinates coordinates) {
-        if (coordinates == null) {
-            throw new IllegalArgumentException("coordinates не может быть null");
-        }
-        this.coordinates = coordinates;
-    }
-
+//
+//    public void setCoordinates(Coordinates coordinates) {
+//        if (coordinates == null) {
+//            throw new IllegalArgumentException("coordinates не может быть null");
+//        }
+//        this.coordinates = coordinates;
+//    }
+//
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
-
-    public void setCreationDate(LocalDateTime creationDate) {
-        if (creationDate == null) {
-            throw new IllegalArgumentException("creationDate не может быть null");
-        }
-        this.creationDate = creationDate;
-    }
-
+//
+//    public void setCreationDate(LocalDateTime creationDate) {
+//        if (creationDate == null) {
+//            throw new IllegalArgumentException("creationDate не может быть null");
+//        }
+//        this.creationDate = creationDate;
+//    }
+//
     public long getStudentsCount() {
         return studentsCount;
     }
-
-    public void setStudentsCount(long studentsCount) {
-        if (studentsCount <= 0) {
-            throw new IllegalArgumentException("studentsCount должен быть > 0");
-        }
-        this.studentsCount = studentsCount;
-    }
-
+//
+//    public void setStudentsCount(long studentsCount) {
+//        if (studentsCount <= 0) {
+//            throw new IllegalArgumentException("studentsCount должен быть > 0");
+//        }
+//        this.studentsCount = studentsCount;
+//    }
+//
     public int getExpelledStudents() {
         return expelledStudents;
     }
-
-    public void setExpelledStudents(int expelledStudents) {
-        if (expelledStudents <= 0) {
-            throw new IllegalArgumentException("expelledStudents должен быть > 0");
-        }
-        this.expelledStudents = expelledStudents;
-    }
-
+//
+//    public void setExpelledStudents(int expelledStudents) {
+//        if (expelledStudents <= 0) {
+//            throw new IllegalArgumentException("expelledStudents должен быть > 0");
+//        }
+//        this.expelledStudents = expelledStudents;
+//    }
+//
     public FormOfEducation getFormOfEducation() {
         return formOfEducation;
     }
-
-    public void setFormOfEducation(FormOfEducation formOfEducation) {
-        if (formOfEducation == null) {
-            throw new IllegalArgumentException("formOfEducation не может быть null");
-        }
-        this.formOfEducation = formOfEducation;
-    }
-
+//
+//    public void setFormOfEducation(FormOfEducation formOfEducation) {
+//        if (formOfEducation == null) {
+//            throw new IllegalArgumentException("formOfEducation не может быть null");
+//        }
+//        this.formOfEducation = formOfEducation;
+//    }
+//
     public Semester getSemesterEnum() {
         return semesterEnum;
     }
-
-    public void setSemesterEnum(Semester semesterEnum) {
-        if (semesterEnum == null) {
-            throw new IllegalArgumentException("semesterEnum не может быть null");
-        }
-        this.semesterEnum = semesterEnum;
-    }
-
+//
+//    public void setSemesterEnum(Semester semesterEnum) {
+//        if (semesterEnum == null) {
+//            throw new IllegalArgumentException("semesterEnum не может быть null");
+//        }
+//        this.semesterEnum = semesterEnum;
+//    }
+//
     public Person getGroupAdmin() {
         return groupAdmin;
     }
+//
+//    public void setGroupAdmin(Person groupAdmin) {
+//        this.groupAdmin = groupAdmin;
+//    }
 
-    public void setGroupAdmin(Person groupAdmin) {
-        this.groupAdmin = groupAdmin;
-    }
 
-    /**
-     * Проверяет валидность объекта.
-     */
     public boolean isValid() {
         try {
             return id != null && id > 0 &&

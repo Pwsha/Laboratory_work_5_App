@@ -7,38 +7,72 @@ public class Location {
     private Double y; // Не null
     private Float z; // Не null
 
-    public Location() {
+    private Location(Builder builder) {
+        this.x = builder.x;
+        this.y = builder.y;
+        this.z = builder.z;
+    }
+
+    public static class Builder {
+        private double x;
+        private Double y;
+        private Float z;
+
+        public Builder x(double x) {
+            this.x = x;
+            return this;
+        }
+
+        public Builder y(Double y) {
+            this.y = y;
+            return this;
+        }
+
+        public Builder z(Float z) {
+            this.z = z;
+            return this;
+        }
+
+        public Location build() {
+            if (y == null) {
+                throw new IllegalArgumentException("y не может быть null");
+            }
+            if (z == null) {
+                throw new IllegalArgumentException("z не может быть null");
+            }
+            return new Location(this);
+        }
     }
 
     public double getX() {
         return x;
     }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
+//
+//    public void setX(double x) {
+//        this.x = x;
+//    }
+//
     public Double getY() {
         return y;
     }
-
-    public void setY(Double y) {
-        if (y == null) {
-            throw new IllegalArgumentException("y не может быть null");
-        }
-        this.y = y;
-    }
-
+//
+//    public void setY(Double y) {
+//        if (y == null) {
+//            throw new IllegalArgumentException("y не может быть null");
+//        }
+//        this.y = y;
+//    }
+//
     public Float getZ() {
         return z;
     }
-
-    public void setZ(Float z) {
-        if (z == null) {
-            throw new IllegalArgumentException("z не может быть null");
-        }
-        this.z = z;
-    }
+//
+//    public void setZ(Float z) {
+//        if (z == null) {
+//            throw new IllegalArgumentException("z не может быть null");
+//        }
+//        this.z = z;
+//    }
 
     public boolean isValid() {
         return y != null && z != null;
