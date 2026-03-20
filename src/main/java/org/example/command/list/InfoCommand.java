@@ -1,34 +1,33 @@
 package org.example.command.list;
 
 import org.example.command.Command;
-import org.example.program.StudyGroup;
+import org.example.program.*;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Scanner;
 
 /**
- * Класс команды info
+ * Класс команды вывода информации о коллекции.
  * @author Pwsha
  * @version v1.3
  */
 public class InfoCommand implements Command {
     private final LocalDateTime initializationDate;
+    private final InitCollection manager;
 
-    /**
-     * Конструктор со значением даты
-     * @param initializationDate
-     */
-    public InfoCommand(LocalDateTime initializationDate) {
+    public InfoCommand(LocalDateTime initializationDate, InitCollection manager) {
         this.initializationDate = initializationDate;
+        this.manager = manager;
     }
 
     @Override
     public String execute(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
         return String.format(
                 "Тип коллекции: %s\nДата инициализации: %s\nКоличество элементов: %d",
-                collection.getClass().getSimpleName(),
+                manager.getCollection().getClass().getSimpleName(),
                 initializationDate,
-                collection.size()
+                manager.getCollection().size()
         );
     }
 

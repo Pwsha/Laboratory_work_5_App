@@ -14,6 +14,8 @@ public class ExitCommand implements Command {
 
     @Override
     public String execute(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
+        System.out.println("Завершение работы...");
+        System.exit(0);
         return "exit";
     }
 

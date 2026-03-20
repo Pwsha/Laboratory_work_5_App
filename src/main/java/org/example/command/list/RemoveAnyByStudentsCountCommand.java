@@ -16,18 +16,20 @@ public class RemoveAnyByStudentsCountCommand implements Command {
     public String execute(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
         if (args.length == 0) {
             return "Ошибка: укажите studentsCount";
+        } else if (args.length > 1) {
+            return "Ошибка: указано больше одного аргумента";
         }
 
         try {
             long count = Long.parseLong(args[0]);
-            StudyGroup toRemove = collection.stream()
+            StudyGroup remove = collection.stream()
                     .filter(g -> g.getStudentsCount() == count)
                     .findFirst()
                     .orElse(null);
 
-            if (toRemove != null) {
-                collection.remove(toRemove);
-                return "Элемент с studentsCount=" + count + " удален (id=" + toRemove.getId() + ")";
+            if (remove != null) {
+                collection.remove(remove);
+                return "Элемент с studentsCount=" + count + " удален (id=" + remove.getId() + ")";
             } else {
                 return "Элемент с studentsCount=" + count + " не найден";
             }

@@ -14,10 +14,6 @@ import java.util.Scanner;
 public class HistoryCommand implements Command {
     private final LinkedList<String> history;
 
-    /**
-     * Конструктор со значением истории
-     * @param history
-     */
     public HistoryCommand(LinkedList<String> history) {
         this.history = history;
     }

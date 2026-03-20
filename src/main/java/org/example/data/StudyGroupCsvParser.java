@@ -12,27 +12,14 @@ import java.util.*;
  * @version v1.3
  */
 public class StudyGroupCsvParser {
-
-    /** Поле файла */
     private final String filename;
-    /** Поле заголовка */
     private static final String HEADER = "id,name,coordinates_x,coordinates_y,creationDate,studentsCount,expelledStudents,formOfEducation,semesterEnum,groupAdmin_name,groupAdmin_birthday,groupAdmin_weight,groupAdmin_passportID,groupAdmin_location_x,groupAdmin_location_y,groupAdmin_location_z";
-    /** Поле даты */
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-    /**
-     * Конструктор со всеми значениями
-     * @param filename - файл
-     */
     public StudyGroupCsvParser(String filename) {
         this.filename = filename;
     }
 
-    /**
-     * Метод загрузки файла и его проверки
-     * @return collection
-     * @throws IOException
-     */
     public HashSet<StudyGroup> loadFromFile() throws IOException {
         HashSet<StudyGroup> collection = new HashSet<>();
         File file = new File(filename);
@@ -46,7 +33,6 @@ public class StudyGroupCsvParser {
         }
 
         try (Scanner scanner = new Scanner(file)) {
-            // Пропускаем заголовок, если он есть
             if (scanner.hasNextLine()) {
                 scanner.nextLine();
             }
@@ -71,13 +57,7 @@ public class StudyGroupCsvParser {
         return collection;
     }
 
-    /**
-     * Метод для команды сохранения данных в файл
-     * @param collection
-     * @throws IOException
-     */
     public void saveToFile(HashSet<StudyGroup> collection) throws IOException {
-        // Проверяем, можно ли писать в файл
         File file = new File(filename);
         if (file.exists() && !file.canWrite()) {
             throw new IOException("Нет прав на запись в файл: " + filename);
@@ -97,20 +77,12 @@ public class StudyGroupCsvParser {
         return file.exists() && file.canRead();
     }
 
-    /**
-     * Метод создания пустого файла
-     * @throws IOException
-     */
     public void createEmptyFile() throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             writer.println(HEADER);
         }
     }
 
-    /**
-     * Функция получения значения поля {@link StudyGroupCsvParser#filename}
-     * @return filename
-     */
     public String getFilename() {
         return filename;
     }
@@ -124,16 +96,13 @@ public class StudyGroupCsvParser {
         try {
             int idx = 0;
 
-            // id
             Long id = parseLong(parts[idx++]);
 
-            // name
             String name = parts[idx++];
             if (name.isEmpty()) {
                 throw new IllegalArgumentException("name не может быть пустым");
             }
 
-            // coordinates
             Float x = parseFloat(parts[idx++]);
             Long y = parseLong(parts[idx++]);
             Coordinates coordinates = new Coordinates.Builder()
@@ -141,32 +110,25 @@ public class StudyGroupCsvParser {
                     .y(y)
                     .build();
 
-            // creationDate
             String dateStr = parts[idx++];
             LocalDateTime creationDate = dateStr.isEmpty() ? LocalDateTime.now() :
                     LocalDateTime.parse(dateStr, DATE_FORMATTER);
 
-            // studentsCount
             long studentsCount = parseLong(parts[idx++]);
 
-            // expelledStudents
             int expelledStudents = parseInt(parts[idx++]);
 
-            // formOfEducation
             String formStr = parts[idx++];
             FormOfEducation formOfEducation = FormOfEducation.valueOf(formStr);
 
-            // semesterEnum
             String semesterStr = parts[idx++];
             Semester semester = Semester.valueOf(semesterStr);
 
-            // groupAdmin (если есть поля)
             Person groupAdmin = null;
             if (parts.length > idx && !parts[idx].isEmpty()) {
                 groupAdmin = parsePerson(parts, idx);
             }
 
-            // Создаем StudyGroup через Builder
             return new StudyGroup.Builder()
                     .id(id)
                     .name(name)
@@ -188,13 +150,11 @@ public class StudyGroupCsvParser {
         int idx = startIdx;
 
         try {
-            // name
             String name = parts[idx++];
             if (name.isEmpty()) {
                 throw new IllegalArgumentException("Имя администратора не может быть пустым");
             }
 
-            // birthday (может быть пустым)
             Date birthday = null;
             if (idx < parts.length && !parts[idx].isEmpty()) {
                 long birthdayMillis = parseLong(parts[idx]);
@@ -202,21 +162,18 @@ public class StudyGroupCsvParser {
             }
             idx++;
 
-            // weight
             Integer weight = null;
             if (idx < parts.length && !parts[idx].isEmpty()) {
                 weight = parseInt(parts[idx]);
             }
             idx++;
 
-            // passportID
             String passportID = null;
             if (idx < parts.length && !parts[idx].isEmpty()) {
                 passportID = parts[idx];
             }
             idx++;
 
-            // location (если есть поля)
             Location location = null;
             if (parts.length > idx + 2) {
                 Double locY = null;
@@ -237,7 +194,6 @@ public class StudyGroupCsvParser {
                     locZ = parseFloat(parts[idx]);
                 }
 
-                // Создаем location только если есть обязательные поля
                 if (locY != null && locZ != null) {
                     location = new Location.Builder()
                             .x(locX)
@@ -247,7 +203,6 @@ public class StudyGroupCsvParser {
                 }
             }
 
-            // Создаем Person через Builder
             return new Person.Builder()
                     .name(name)
                     .birthday(birthday)
@@ -265,7 +220,6 @@ public class StudyGroupCsvParser {
     private String formatLine(StudyGroup group) {
         StringBuilder sb = new StringBuilder();
 
-        // Основные поля
         sb.append(group.getId()).append(",");
         sb.append(escapeCsv(group.getName())).append(",");
         sb.append(group.getCoordinates().getX()).append(",");
@@ -276,7 +230,6 @@ public class StudyGroupCsvParser {
         sb.append(group.getFormOfEducation().name()).append(",");
         sb.append(group.getSemesterEnum().name()).append(",");
 
-        // Администратор
         Person admin = group.getGroupAdmin();
         if (admin != null) {
             sb.append(escapeCsv(admin.getName())).append(",");
@@ -310,7 +263,7 @@ public class StudyGroupCsvParser {
         return value;
     }
 
-    private Long parseLong(String str) {
+    public static Long parseLong(String str) {
         if (str == null || str.trim().isEmpty()) return 0L;
         try {
             return Long.parseLong(str.trim());
@@ -319,7 +272,7 @@ public class StudyGroupCsvParser {
         }
     }
 
-    private Integer parseInt(String str) {
+    public static Integer parseInt(String str) {
         if (str == null || str.trim().isEmpty()) return 0;
         try {
             return Integer.parseInt(str.trim());
@@ -328,7 +281,7 @@ public class StudyGroupCsvParser {
         }
     }
 
-    private Float parseFloat(String str) {
+    public static Float parseFloat(String str) {
         if (str == null || str.trim().isEmpty()) return 0f;
         try {
             return Float.parseFloat(str.trim());
@@ -337,7 +290,7 @@ public class StudyGroupCsvParser {
         }
     }
 
-    private Double parseDouble(String str) {
+    public static Double parseDouble(String str) {
         if (str == null || str.trim().isEmpty()) return 0.0;
         try {
             return Double.parseDouble(str.trim());

@@ -9,21 +9,12 @@ import java.util.Objects;
  * @version v1.3
  */
 public class Person {
-    /** Поле имени*/
     private String name; // Не null, не пустое
-    /** Поле дня рождения */
     private Date birthday; // Может быть null
-    /** Поле веса */
     private Integer weight; // Не null, >0
-    /** Поле id паспорта */
     private String passportID; // Длина <= 20, не null
-    /** Поле локации */
     private Location location; // Может быть null
 
-    /**
-     * Конструктор со всеми значениями
-     * @param builder
-     */
     private Person(Builder builder) {
         this.name = builder.name;
         this.birthday = builder.birthday;
@@ -84,54 +75,24 @@ public class Person {
         }
     }
 
-    /**
-     * Функция получения значения поля {@link Person#name}
-     * @return name
-     */
     public String getName() {
         return name;
     }
-    /**
-     * Функция получения значения поля {@link Person#birthday}
-     * @return birthday
-     */
+
     public Date getBirthday() {
         return birthday;
     }
-    /**
-     * Функция получения значения поля {@link Person#weight}
-     * @return weight
-     */
+
     public Integer getWeight() {
         return weight;
     }
-    /**
-     * Функция получения значения поля {@link Person#passportID}
-     * @return passportID
-     */
+
     public String getPassportID() {
         return passportID;
     }
-    /**
-     * Функция получения значения поля {@link Person#location}
-     * @return location
-     */
+
     public Location getLocation() {
         return location;
-    }
-
-    /**
-     * Метод проверки значений
-     * @return true/false
-     */
-    public boolean isValid() {
-        try {
-            return name != null && !name.trim().isEmpty() &&
-                    weight != null && weight > 0 &&
-                    passportID != null && passportID.length() <= 20;
-        } catch (Exception e) {
-            return false;
-        }
     }
 
     @Override
@@ -140,17 +101,19 @@ public class Person {
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
         return Objects.equals(name, person.name) &&
+                Objects.equals(birthday, person.birthday) &&
+                Objects.equals(weight, person.weight) &&
                 Objects.equals(passportID, person.passportID);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, passportID);
+        return Objects.hash(name, birthday, weight, passportID);
     }
 
     @Override
     public String toString() {
-        return "Person{name='" + name + "', passport='" + passportID + "'}";
+        return "Person{name='" + name + "', birthday='" + birthday + "', weight='" + weight + "', passport='" + passportID + "'}";
     }
 
 }

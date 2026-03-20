@@ -1,5 +1,6 @@
 package org.example.command;
 
+import org.example.data.StudyGroupCsvParser;
 import org.example.program.*;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -47,7 +48,6 @@ public class CommandHelper {
     public static StudyGroup readStudyGroup(Scanner scanner, HashSet<StudyGroup> collection) {
         System.out.println("Введите данные группы:");
 
-        // name
         String name = null;
         while (true) {
             System.out.print("  Название группы: ");
@@ -58,10 +58,8 @@ public class CommandHelper {
             System.out.println("  Ошибка: название не может быть пустым");
         }
 
-        // coordinates
         Coordinates coordinates = readCoordinates(scanner);
 
-        // studentsCount
         long studentsCount = 0;
         while (true) {
             System.out.print("  Количество студентов (>0): ");
@@ -76,7 +74,6 @@ public class CommandHelper {
             }
         }
 
-        // expelledStudents
         int expelledStudents = 0;
         while (true) {
             System.out.print("  Количество отчисленных (>0): ");
@@ -91,7 +88,6 @@ public class CommandHelper {
             }
         }
 
-        // formOfEducation
         FormOfEducation formOfEducation = readEnum(scanner, FormOfEducation.class, "форму обучения");
 
         // semesterEnum
@@ -164,7 +160,6 @@ public class CommandHelper {
     private static Person readPerson(Scanner scanner) {
         System.out.println("  Данные администратора:");
 
-        // name
         String name = null;
         while (true) {
             System.out.print("    Имя: ");
@@ -175,19 +170,17 @@ public class CommandHelper {
             System.out.println("    Ошибка: имя не может быть пустым");
         }
 
-        // birthday
         Date birthday = null;
-        System.out.print("    Дата рождения (yyyy-MM-dd) или пусто: ");
-        String dateStr = scanner.nextLine().trim();
-        if (!dateStr.isEmpty()) {
+        System.out.print("    Дата рождения год-месяц-день (yyyy-MM-dd) или пусто: ");
+        String date = scanner.nextLine().trim();
+        if (!date.isEmpty()) {
             try {
-                birthday = java.sql.Date.valueOf(dateStr);
+                birthday = java.sql.Date.valueOf(date);
             } catch (IllegalArgumentException e) {
                 System.out.println("    Неверный формат, поле не будет установлено");
             }
         }
 
-        // weight
         Integer weight = null;
         while (true) {
             System.out.print("    Вес (>0): ");
@@ -202,18 +195,30 @@ public class CommandHelper {
             }
         }
 
-        // passportID
         String passportID = null;
         while (true) {
             System.out.print("    Номер паспорта (<=20 символов): ");
-            passportID = scanner.nextLine().trim();
-            if (!passportID.isEmpty() && passportID.length() <= 20) {
-                break;
+            String input = scanner.nextLine().trim();
+
+            // Проверка длины
+            if (input.length() > 20) {
+                System.out.println("    Ошибка: номер паспорта не может быть длиннее 20 символов");
+                continue;
             }
-            System.out.println("    Ошибка: от 1 до 20 символов");
+
+            if (input.isEmpty()) {
+                System.out.println("    Ошибка: введите номер паспорта");
+                continue;
+            }
+
+            try {
+                passportID = String.valueOf(Integer.parseInt(input));
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("    Ошибка: введите число");
+            }
         }
 
-        // location
         Location location = null;
         System.out.print("    Добавить местоположение? (y/n): ");
         if (scanner.nextLine().trim().toLowerCase().startsWith("y")) {

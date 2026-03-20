@@ -8,15 +8,9 @@ import java.util.Objects;
  * @version v1.3
  */
 public class Coordinates {
-    /** Поле x */
     private Float x; // Максимальное значение: 741, не null
-    /** Поле y */
-    private long y; // > -938
+    private long y; // > -938, не null
 
-    /**
-     * Конструктор со всеми значениями
-     * @param builder
-     */
     private Coordinates(Builder builder) {
         this.x = builder.x;
         this.y = builder.y;
@@ -53,28 +47,12 @@ public class Coordinates {
         }
     }
 
-    /**
-     * Функция получения значения поля {@link Coordinates#x}
-     * @return x
-     */
     public Float getX() {
         return x;
     }
 
-    /**
-     * Функция получения значения поля {@link Coordinates#y}
-     * @return y
-     */
     public long getY() {
         return y;
-    }
-
-    /**
-     * Метод проверки значений
-     * @return true/false
-     */
-    public boolean isValid() {
-        return x != null && x <= 741 && y > -938;
     }
 
     @Override

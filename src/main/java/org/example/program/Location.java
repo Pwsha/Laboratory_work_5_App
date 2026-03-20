@@ -8,17 +8,10 @@ import java.util.Objects;
  * @version v1.3
  */
 public class Location {
-    /** Поле x */
-    private double x;
-    /** Поле y */
+    private double x; // может быть null
     private Double y; // Не null
-    /** Поле z */
     private Float z; // Не null
 
-    /**
-     * Конструктор со всеми значениями
-     * @param builder
-     */
     private Location(Builder builder) {
         this.x = builder.x;
         this.y = builder.y;
@@ -59,36 +52,16 @@ public class Location {
         }
     }
 
-    /**
-     * Функция получения значения поля {@link Location#x}
-     * @return x
-     */
     public double getX() {
         return x;
     }
 
-    /**
-     * Функция получения значения поля {@link Location#y}
-     * @return y
-     */
     public Double getY() {
         return y;
     }
 
-    /**
-     * Функция получения значения поля {@link Location#z}
-     * @return z
-     */
     public Float getZ() {
         return z;
-    }
-
-    /**
-     * Метод проверки значений
-     * @return true/false
-     */
-    public boolean isValid() {
-        return y != null && z != null;
     }
 
     @Override

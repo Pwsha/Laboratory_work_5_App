@@ -16,6 +16,8 @@ public class RemoveByIdCommand implements Command {
     public String execute(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
         if (args.length == 0) {
             return "Ошибка: укажите id";
+        } else if (args.length > 1) {
+            return "Ошибка: указано больше одного аргумента";
         }
 
         try {

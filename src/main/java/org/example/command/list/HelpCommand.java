@@ -14,10 +14,6 @@ import java.util.Scanner;
 public class HelpCommand implements Command {
     private final Map<String, Command> commands;
 
-    /**
-     * Конструктор со значением всех команд
-     * @param commands
-     */
     public HelpCommand(Map<String, Command> commands) {
         this.commands = commands;
     }

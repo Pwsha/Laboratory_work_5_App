@@ -9,23 +9,14 @@ import java.util.Objects;
  * @version v1.3
  */
 public class StudyGroup implements Comparable<StudyGroup> {
-    /** Поле id */
     private final Long id; // Поле не может быть null, >0, уникальное, генерируется автоматически
-    /** Поле имени */
     private final String name; // Поле не может быть null, не пустое
-    /** Поле координат */
     private final Coordinates coordinates; // Поле не может быть null
-    /** Поле даты*/
     private final LocalDateTime creationDate; // Поле не может быть null, генерируется автоматически
-    /** Поле количества студентов */
     private final long studentsCount; // >0
-    /** Поле исключённых студентов */
     private final int expelledStudents; // >0
-    /** Поле видом обучения */
     private final FormOfEducation formOfEducation; // Поле не может быть null
-    /** Поле семестров */
     private final Semester semesterEnum; // Поле не может быть null
-    /** Поле админа */
     private final Person groupAdmin; // Может быть null
 
     /**
@@ -134,82 +125,42 @@ public class StudyGroup implements Comparable<StudyGroup> {
         }
     }
 
-    /**
-     * Функция получения значения поля {@link StudyGroup#id}
-     * @return id
-     */
     public Long getId() {
         return id;
     }
 
-    /**
-     * Функция получения значения поля {@link StudyGroup#name}
-     * @return id
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * Функция получения значения поля {@link StudyGroup#coordinates}
-     * @return id
-     */
     public Coordinates getCoordinates() {
         return coordinates;
     }
 
-    /**
-     * Функция получения значения поля {@link StudyGroup#creationDate}
-     * @return id
-     */
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    /**
-     * Функция получения значения поля {@link StudyGroup#studentsCount}
-     * @return id
-     */
     public long getStudentsCount() {
         return studentsCount;
     }
 
-    /**
-     * Функция получения значения поля {@link StudyGroup#expelledStudents}
-     * @return id
-     */
     public int getExpelledStudents() {
         return expelledStudents;
     }
 
-    /**
-     * Функция получения значения поля {@link StudyGroup#formOfEducation}
-     * @return id
-     */
     public FormOfEducation getFormOfEducation() {
         return formOfEducation;
     }
 
-    /**
-     * Функция получения значения поля {@link StudyGroup#semesterEnum}
-     * @return id
-     */
     public Semester getSemesterEnum() {
         return semesterEnum;
     }
 
-    /**
-     * Функция получения значения поля {@link StudyGroup#groupAdmin}
-     * @return id
-     */
     public Person getGroupAdmin() {
         return groupAdmin;
     }
 
-    /**
-     * Метод проверки значений
-     * @return true/false
-     */
     public boolean isValid() {
         try {
             return id != null && id > 0 &&
@@ -250,7 +201,7 @@ public class StudyGroup implements Comparable<StudyGroup> {
 
     @Override
     public String toString() {
-        return String.format("StudyGroup[id=%d, name='%s', students=%d, form=%s, semester=%s]",
-                id, name, studentsCount, formOfEducation, semesterEnum);
+        return String.format("StudyGroup[id=%d, name='%s', x=%.1f, y=%d, data=%tT %tF, students=%d, form=%s, semester=%s]",
+                id, name, coordinates.getX(), coordinates.getY(), creationDate, creationDate, studentsCount, formOfEducation, semesterEnum);
     }
 }
