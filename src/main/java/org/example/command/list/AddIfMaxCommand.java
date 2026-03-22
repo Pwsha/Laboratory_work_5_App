@@ -1,8 +1,7 @@
 package org.example.command.list;
 
 import org.example.command.*;
-import org.example.data.ComparatorCollection;
-import org.example.program.StudyGroup;
+import org.example.init.StudyGroup;
 
 import java.util.HashSet;
 import java.util.Scanner;
@@ -16,42 +15,35 @@ public class AddIfMaxCommand implements Command {
 
     @Override
     public String execute(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
-        StudyGroup newGroup = getNewElement(args, collection, scanner);
-        if (newGroup == null) return "Ошибка создания элемента";
+        StudyGroup newGroup;
+
+        if (args.length == 0) {
+            newGroup = CommandHelper.readStudyGroup(scanner, collection);
+        } else if (args.length == 1) {
+            String input = String.join(" ", args);
+            if (input.startsWith("{") && input.endsWith("}")) {
+                input = input.substring(1, input.length() - 1);
+            }
+            newGroup = GroupParser.parseFromString(input, collection);
+        } else {
+            return "Oшибка: введено неверное количество аргументов";
+        }
 
         if (collection.isEmpty()) {
             collection.add(newGroup);
             return "Элемент добавлен (коллекция была пуста) с id: " + newGroup.getId();
         }
 
-        StudyGroup max = ComparatorCollection.findMax(collection);
+        StudyGroup max = collection.stream()
+                .max(StudyGroup::compareTo)
+                .orElse(null);
 
-        if (ComparatorCollection.isGreater(newGroup, max)) {
+        if (newGroup.compareTo(max) > 0) {
             collection.add(newGroup);
             return "Элемент добавлен с id: " + newGroup.getId() + " (превышает максимальный)";
         } else {
-            return "Элемент не добавлен: не превышает максимальный";
+            return "Элемент не добавлен: не превышает максимальный элемент коллекции";
         }
-    }
-
-    private StudyGroup getNewElement(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
-        try {
-            if (args.length == 0) {
-                return CommandHelper.readStudyGroup(scanner, collection);
-            } else if (args.length == 1) {
-                String input = String.join(" ", args);
-                if (input.startsWith("{") && input.endsWith("}")) {
-                    input = input.substring(1, input.length() - 1);
-                }
-                return StringArguments.parseFromString(input, collection);
-            } else {
-                System.out.println("Ошибка: введено неверное количество аргументов");
-            }
-        } catch (Exception e) {
-            System.out.println("Ошибка: " + e.getMessage());
-            return null;
-        }
-        return null;
     }
 
     @Override

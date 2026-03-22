@@ -1,8 +1,7 @@
 package org.example.command.list;
 
 import org.example.command.*;
-import org.example.data.ComparatorCollection;
-import org.example.program.StudyGroup;
+import org.example.init.StudyGroup;
 
 import java.util.HashSet;
 import java.util.Scanner;
@@ -20,37 +19,32 @@ public class RemoveGreaterCommand implements Command {
             return "Коллекция пуста";
         }
 
-        StudyGroup reference = getReferenceElement(args, collection, scanner);
-        if (reference == null) return "Ошибка создания эталонного элемента";
+        StudyGroup reference;
+
+        if (args.length == 0) {
+            System.out.println("Введите эталонный элемент:");
+            reference = CommandHelper.readStudyGroup(scanner, collection);
+        } else if (args.length == 1) {
+            String input = String.join(" ", args);
+            if (input.startsWith("{") && input.endsWith("}")) {
+                input = input.substring(1, input.length() - 1);
+            }
+            reference = GroupParser.parseFromString(input, collection);
+        } else {
+            return "Ошибка: введено неверное количество аргументов";
+        }
 
         int initialSize = collection.size();
 
-        collection.removeIf(group -> ComparatorCollection.isGreater(group, reference));
+        collection.removeIf(group -> group.compareTo(reference) > 0);
 
         int removed = initialSize - collection.size();
 
-        return removed == 0 ? "Нет элементов, превышающих заданный" : "Удалено элементов: " + removed;
-    }
-
-    private StudyGroup getReferenceElement(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
-        try {
-            if (args.length == 0) {
-                System.out.println("Введите эталонный элемент:");
-                return CommandHelper.readStudyGroup(scanner, collection);
-            } else if (args.length == 1){
-                String input = String.join(" ", args);
-                if (input.startsWith("{") && input.endsWith("}")) {
-                    input = input.substring(1, input.length() - 1);
-                }
-                return StringArguments.parseFromString(input, collection);
-            } else {
-                System.out.println("Ошибка: введено неверное количество аргументов");
-            }
-        } catch (Exception e) {
-            System.out.println("Ошибка: " + e.getMessage());
-            return null;
+        if (removed == 0) {
+            return "Нет элементов, превышающих заданный";
+        } else {
+            return "Удалено элементов: " + removed;
         }
-        return null;
     }
 
     @Override

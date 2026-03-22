@@ -1,7 +1,7 @@
 package org.example.command;
 
-import org.example.data.StudyGroupCsvParser;
-import org.example.program.*;
+import org.example.init.*;
+
 import java.time.LocalDateTime;
 import java.util.*;
 

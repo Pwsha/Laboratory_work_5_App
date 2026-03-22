@@ -2,8 +2,8 @@ package org.example.command.list;
 
 import org.example.command.Command;
 import org.example.command.CommandHelper;
-import org.example.command.StringArguments;
-import org.example.program.StudyGroup;
+import org.example.command.GroupParser;
+import org.example.init.StudyGroup;
 import java.util.HashSet;
 import java.util.Scanner;
 
@@ -46,7 +46,7 @@ public class UpdateCommand implements Command {
                 if (input.startsWith("{") && input.endsWith("}")) {
                     input = input.substring(1, input.length() - 1);
                 }
-                newGroup = StringArguments.parseFromString(input, collection);
+                newGroup = GroupParser.parseFromString(input, collection);
             } else {
                 return "Введено неверное количество аргументов";
             }

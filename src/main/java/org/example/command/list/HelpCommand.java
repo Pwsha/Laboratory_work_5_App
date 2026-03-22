@@ -1,7 +1,7 @@
 package org.example.command.list;
 
 import org.example.command.Command;
-import org.example.program.StudyGroup;
+import org.example.init.StudyGroup;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Scanner;

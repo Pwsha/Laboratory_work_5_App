@@ -1,6 +1,7 @@
 package org.example.data;
 
-import org.example.program.*;
+import org.example.init.*;
+
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

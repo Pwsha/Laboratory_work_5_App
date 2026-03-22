@@ -1,9 +1,8 @@
 package org.example;
 
-import org.example.command.*;
-import org.example.command.list.*;
-import org.example.program.InitCollection;
-import java.util.*;
+import org.example.program.*;
+
+import java.util.Scanner;
 
 /**
  * Главный класс приложения
@@ -18,7 +17,12 @@ public class App {
             System.exit(1);
         }
 
-        InitCollection manager = new InitCollection(args[0]);
-        manager.run();
+        Scanner scanner = new Scanner(System.in);
+
+        CollectionManager collectionManager = new CollectionManager(args[0]);
+        CommandManager commandManager = new CommandManager(collectionManager, scanner);
+
+        commandManager.run();
+        scanner.close();
     }
 }

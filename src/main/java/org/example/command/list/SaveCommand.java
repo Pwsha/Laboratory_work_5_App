@@ -1,8 +1,10 @@
 package org.example.command.list;
 
 import org.example.command.Command;
-import org.example.data.StudyGroupCsvParser;
-import org.example.program.StudyGroup;
+import org.example.init.StudyGroup;
+import org.example.program.CollectionManager;
+
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Scanner;
 
@@ -12,18 +14,18 @@ import java.util.Scanner;
  * @version v1.3
  */
 public class SaveCommand implements Command {
-    private final StudyGroupCsvParser parser;
+    private final CollectionManager manager;
 
-    public SaveCommand(StudyGroupCsvParser parser) {
-        this.parser = parser;
+    public SaveCommand(CollectionManager manager) {
+        this.manager = manager;
     }
 
     @Override
     public String execute(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
         try {
-            parser.saveToFile(collection);
-            return "Коллекция сохранена в файл " + parser.getFilename();
-        } catch (Exception e) {
+            manager.save();
+            return "Коллекция сохранена в файл";
+        } catch (IOException e) {
             return "Ошибка сохранения: " + e.getMessage();
         }
     }

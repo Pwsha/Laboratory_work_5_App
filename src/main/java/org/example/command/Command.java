@@ -1,6 +1,6 @@
 package org.example.command;
 
-import org.example.program.StudyGroup;
+import org.example.init.StudyGroup;
 import java.util.HashSet;
 import java.util.Scanner;
 

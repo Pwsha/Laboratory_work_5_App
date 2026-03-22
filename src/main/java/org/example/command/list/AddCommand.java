@@ -1,7 +1,7 @@
 package org.example.command.list;
 
 import org.example.command.*;
-import org.example.program.StudyGroup;
+import org.example.init.StudyGroup;
 import java.util.HashSet;
 import java.util.Scanner;
 
@@ -22,7 +22,7 @@ public class AddCommand implements Command {
             if (input.startsWith("{") && input.endsWith("}")) {
                 input = input.substring(1, input.length() - 1);
             }
-            group = StringArguments.parseFromString(input, collection);
+            group = GroupParser.parseFromString(input, collection);
         } else {
             return "Введено неверное количество аргументов";
         }

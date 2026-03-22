@@ -1,6 +1,7 @@
 package org.example.command.list;
 
 import org.example.command.Command;
+import org.example.init.StudyGroup;
 import org.example.program.*;
 
 import java.time.LocalDateTime;
@@ -14,9 +15,9 @@ import java.util.Scanner;
  */
 public class InfoCommand implements Command {
     private final LocalDateTime initializationDate;
-    private final InitCollection manager;
+    private final CollectionManager manager;
 
-    public InfoCommand(LocalDateTime initializationDate, InitCollection manager) {
+    public InfoCommand(LocalDateTime initializationDate, CollectionManager manager) {
         this.initializationDate = initializationDate;
         this.manager = manager;
     }
