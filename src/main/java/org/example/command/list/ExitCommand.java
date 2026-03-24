@@ -2,8 +2,6 @@ package org.example.command.list;
 
 import org.example.command.Command;
 import org.example.init.StudyGroup;
-import java.util.HashSet;
-import java.util.Scanner;
 
 /**
  * Класс команды выхода из приложения
@@ -13,7 +11,7 @@ import java.util.Scanner;
 public class ExitCommand implements Command {
 
     @Override
-    public String execute(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
+    public String execute(StudyGroup group) {
         System.out.println("Завершение работы...");
         System.exit(0);
         return "exit";

@@ -2,9 +2,8 @@ package org.example.command.list;
 
 import org.example.command.Command;
 import org.example.init.StudyGroup;
-import java.util.HashSet;
+
 import java.util.LinkedList;
-import java.util.Scanner;
 
 /**
  * Класс команды history
@@ -19,7 +18,7 @@ public class HistoryCommand implements Command {
     }
 
     @Override
-    public String execute(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
+    public String execute(StudyGroup group) {
         if (history.isEmpty()) {
             return "История команд пуста";
         }

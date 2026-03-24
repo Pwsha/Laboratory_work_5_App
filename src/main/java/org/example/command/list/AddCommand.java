@@ -2,6 +2,8 @@ package org.example.command.list;
 
 import org.example.command.*;
 import org.example.init.StudyGroup;
+import org.example.program.CollectionManager;
+
 import java.util.HashSet;
 import java.util.Scanner;
 
@@ -11,24 +13,16 @@ import java.util.Scanner;
  * @version v1.3
  */
 public class AddCommand implements Command {
+    private final CollectionManager manager;
+
+    public AddCommand(CollectionManager manager) {
+        this.manager = manager;
+    }
 
     @Override
-    public String execute(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
-        StudyGroup group;
-        if (args.length == 0) {
-            group = CommandHelper.readStudyGroup(scanner, collection);
-        } else if (args.length == 1) {
-            String input = String.join(" ", args);
-            if (input.startsWith("{") && input.endsWith("}")) {
-                input = input.substring(1, input.length() - 1);
-            }
-            group = GroupParser.parseFromString(input, collection);
-        } else {
-            return "Введено неверное количество аргументов";
-        }
-
-        collection.add(group);
-        return "Элемент успешно добавлен с id: " + group.getId();
+    public String execute(StudyGroup group) {
+        manager.add(group);
+        return "Элемент добавлен с id: " + group.getId();
     }
 
     @Override

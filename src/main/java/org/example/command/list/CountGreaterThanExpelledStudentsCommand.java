@@ -2,8 +2,7 @@ package org.example.command.list;
 
 import org.example.command.Command;
 import org.example.init.StudyGroup;
-import java.util.HashSet;
-import java.util.Scanner;
+import org.example.program.CollectionManager;
 
 /**
  * Класс команды подсчёта отчисленных студентов
@@ -11,25 +10,23 @@ import java.util.Scanner;
  * @version v1.3
  */
 public class CountGreaterThanExpelledStudentsCommand implements Command {
+    private final CollectionManager manager;
+
+    public CountGreaterThanExpelledStudentsCommand(CollectionManager manager) {
+        this.manager = manager;
+    }
 
     @Override
-    public String execute(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
-        if (args.length == 0) {
-            return "Ошибка: укажите expelledStudents";
-        } else if (args.length > 1) {
-            return "Ошибка: указано больше одного аргумента";
-        }
+    public String execute(StudyGroup group) {
+        return "Ошибка: используйте метод с числом";
+    }
 
-        try {
-            int value = Integer.parseInt(args[0]);
-            long count = collection.stream()
-                    .filter(g -> g.getExpelledStudents() > value)
-                    .count();
+    public String execute(Integer expelledStudents) {
+        long count = manager.getCollection().stream()
+                .filter(g -> g.getExpelledStudents() > expelledStudents)
+                .count();
 
-            return "Количество элементов с expelledStudents > " + value + ": " + count;
-        } catch (NumberFormatException e) {
-            return "Ошибка: expelledStudents должен быть числом";
-        }
+        return "Количество элементов с expelledStudents > " + expelledStudents + ": " + count;
     }
 
     @Override

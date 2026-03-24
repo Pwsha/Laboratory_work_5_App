@@ -29,6 +29,14 @@ public class CollectionManager {
         collection.add(group);
     }
 
+    public void clear() {
+        collection.clear();
+    }
+
+    public boolean removeById(Long id) {
+        return collection.removeIf(g -> g.getId().equals(id));
+    }
+
     public void save() throws IOException {
         csvParser.saveToFile(collection);
     }

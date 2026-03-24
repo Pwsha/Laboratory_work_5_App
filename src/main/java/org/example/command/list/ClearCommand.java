@@ -2,8 +2,8 @@ package org.example.command.list;
 
 import org.example.command.Command;
 import org.example.init.StudyGroup;
-import java.util.HashSet;
-import java.util.Scanner;
+import org.example.program.CollectionManager;
+
 
 /**
  * Класс команды очищения коллекции
@@ -11,11 +11,16 @@ import java.util.Scanner;
  * @version v1.3
  */
 public class ClearCommand implements Command {
+    private final CollectionManager manager;
+
+    public ClearCommand(CollectionManager manager) {
+        this.manager = manager;
+    }
 
     @Override
-    public String execute(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
-        int size = collection.size();
-        collection.clear();
+    public String execute(StudyGroup group) {
+        int size = manager.getCollection().size();
+        manager.clear();
         return "Коллекция очищена. Удалено элементов: " + size;
     }
 

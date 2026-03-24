@@ -1,6 +1,7 @@
 package org.example.program;
 
 import org.example.command.Command;
+import org.example.command.CommandStatus;
 import org.example.command.list.*;
 import org.example.init.*;
 
@@ -18,6 +19,7 @@ public class CommandManager {
     private final LocalDateTime startTime;
     private final CollectionManager collectionManager;
     private final Scanner scanner;
+    private final CommandExecute executor;
 
     public CommandManager(CollectionManager collectionManager, Scanner scanner) {
         this.commands = new HashMap<>();
@@ -25,26 +27,27 @@ public class CommandManager {
         this.startTime = LocalDateTime.now();
         this.collectionManager = collectionManager;
         this.scanner = scanner;
+        this.executor = new CommandExecute(collectionManager, scanner);
 
         initializeCommands();
     }
 
     private void initializeCommands() {
         commands.put("help", new HelpCommand(commands));
-        commands.put("info", new InfoCommand(startTime, collectionManager));
-        commands.put("show", new ShowCommand());
-        commands.put("add", new AddCommand());
-        commands.put("update", new UpdateCommand());
-        commands.put("remove_by_id", new RemoveByIdCommand());
-        commands.put("clear", new ClearCommand());
+        commands.put("info", new InfoCommand(collectionManager, startTime));
+        commands.put("show", new ShowCommand(collectionManager));
+        commands.put("add", new AddCommand(collectionManager));
+        commands.put("update", new UpdateCommand(collectionManager));
+        commands.put("remove_by_id", new RemoveByIdCommand(collectionManager));
+        commands.put("clear", new ClearCommand(collectionManager));
         commands.put("save", new SaveCommand(collectionManager));
         commands.put("exit", new ExitCommand());
-        commands.put("add_if_max", new AddIfMaxCommand());
-        commands.put("remove_greater", new RemoveGreaterCommand());
+        commands.put("add_if_max", new AddIfMaxCommand(collectionManager));
+        commands.put("remove_greater", new RemoveGreaterCommand(collectionManager));
         commands.put("history", new HistoryCommand(commandHistory));
-        commands.put("remove_any_by_students_count", new RemoveAnyByStudentsCountCommand());
-        commands.put("min_by_semester_enum", new MinBySemesterEnumCommand());
-        commands.put("count_greater_than_expelled_students", new CountGreaterThanExpelledStudentsCommand());
+        commands.put("remove_any_by_students_count", new RemoveAnyByStudentsCountCommand(collectionManager));
+        commands.put("min_by_semester_enum", new MinBySemesterEnumCommand(collectionManager));
+        commands.put("count_greater_than_expelled_students", new CountGreaterThanExpelledStudentsCommand(collectionManager));
         commands.put("execute_script", new ExecuteScriptCommand(commands));
     }
 
@@ -76,9 +79,13 @@ public class CommandManager {
                 continue;
             }
 
-            String result = command.execute(new String[]{cmdArgs}, collectionManager.getCollection(), scanner);
-            System.out.println(result);
-
+            try {
+                String result = executor.execute(command, cmdName, cmdArgs);
+                System.out.println(result);
+                if (cmdName.equals("exit")) break;
+            } catch (Exception e) {
+                System.out.println("Ошибка: " + e.getMessage());
+            }
         }
     }
 

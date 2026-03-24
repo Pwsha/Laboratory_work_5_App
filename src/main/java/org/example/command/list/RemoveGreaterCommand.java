@@ -2,9 +2,7 @@ package org.example.command.list;
 
 import org.example.command.*;
 import org.example.init.StudyGroup;
-
-import java.util.HashSet;
-import java.util.Scanner;
+import org.example.program.CollectionManager;
 
 /**
  * Класс команды удаления всех элементов больше заданного
@@ -12,33 +10,21 @@ import java.util.Scanner;
  * @version v1.3
  */
 public class RemoveGreaterCommand implements Command {
+    private final CollectionManager manager;
+
+    public RemoveGreaterCommand(CollectionManager manager) {
+        this.manager = manager;
+    }
 
     @Override
-    public String execute(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
-        if (collection.isEmpty()) {
+    public String execute(StudyGroup reference) {
+        if (manager.getCollection().isEmpty()) {
             return "Коллекция пуста";
         }
 
-        StudyGroup reference;
-
-        if (args.length == 0) {
-            System.out.println("Введите эталонный элемент:");
-            reference = CommandHelper.readStudyGroup(scanner, collection);
-        } else if (args.length == 1) {
-            String input = String.join(" ", args);
-            if (input.startsWith("{") && input.endsWith("}")) {
-                input = input.substring(1, input.length() - 1);
-            }
-            reference = GroupParser.parseFromString(input, collection);
-        } else {
-            return "Ошибка: введено неверное количество аргументов";
-        }
-
-        int initialSize = collection.size();
-
-        collection.removeIf(group -> group.compareTo(reference) > 0);
-
-        int removed = initialSize - collection.size();
+        int initialSize = manager.getCollection().size();
+        manager.getCollection().removeIf(group -> group.compareTo(reference) > 0);
+        int removed = initialSize - manager.getCollection().size();
 
         if (removed == 0) {
             return "Нет элементов, превышающих заданный";

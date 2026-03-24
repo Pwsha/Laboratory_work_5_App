@@ -2,6 +2,8 @@ package org.example.command.list;
 
 import org.example.command.Command;
 import org.example.init.StudyGroup;
+import org.example.program.CollectionManager;
+import org.example.program.CommandExecute;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,7 +15,6 @@ import java.util.*;
  * @version v1.3
  */
 public class ExecuteScriptCommand implements Command {
-
     private final Map<String, Command> commands;
     private static Set<String> executingScripts = new HashSet<>();
 
@@ -22,15 +23,11 @@ public class ExecuteScriptCommand implements Command {
     }
 
     @Override
-    public String execute(String[] args, HashSet<StudyGroup> collection, Scanner mainScanner) {
-        if (args.length == 0) {
-            return "Ошибка: укажите имя файла со скриптом";
-        } else if (args.length > 1) {
-            return "Ошибка: указано больше одного аргумента";
-        }
+    public String execute(StudyGroup group) {
+        return "Ошибка: укажите имя файла";
+    }
 
-
-        String filename = args[0];
+    public String execute(String filename, HashSet<StudyGroup> collection, Scanner mainScanner, CollectionManager collectionManager) {
         File scriptFile = new File(filename);
 
         if (!scriptFile.exists()) {
@@ -46,6 +43,8 @@ public class ExecuteScriptCommand implements Command {
         StringBuilder result = new StringBuilder();
         result.append("Выполнение скрипта: ").append(filename).append("\n");
 
+        CommandExecute executor = new CommandExecute(collectionManager, mainScanner);
+
         try (Scanner scriptScanner = new Scanner(scriptFile)) {
             int lineNumber = 0;
             int executedCommands = 0;
@@ -54,9 +53,7 @@ public class ExecuteScriptCommand implements Command {
                 lineNumber++;
                 String line = scriptScanner.nextLine().trim();
 
-                if (line.isEmpty() || line.startsWith("#")) {
-                    continue;
-                }
+                if (line.isEmpty() || line.startsWith("#")) continue;
 
                 result.append("[").append(lineNumber).append("] ").append(line).append("\n");
 
@@ -71,23 +68,14 @@ public class ExecuteScriptCommand implements Command {
                 }
 
                 try {
-                    String cmdResult;
-
-                    if (cmdArgs.startsWith("{")) {
-                        String[] argArray = new String[]{cmdArgs};
-                        cmdResult = command.execute(argArray, collection, mainScanner);
-                    } else {
-                        String[] argArray = cmdArgs.isEmpty() ? new String[0] : cmdArgs.split("\\s+");
-                        cmdResult = command.execute(argArray, collection, mainScanner);
-                    }
-
+                    String cmdResult = executor.execute(command, cmdName, cmdArgs);
                     result.append("  ").append(cmdResult).append("\n");
                     executedCommands++;
-
                 } catch (Exception e) {
                     result.append("  Ошибка: ").append(e.getMessage()).append("\n");
                 }
             }
+
             result.append("Скрипт выполнен. Выполнено команд: ").append(executedCommands);
 
         } catch (FileNotFoundException e) {
@@ -95,6 +83,7 @@ public class ExecuteScriptCommand implements Command {
         } finally {
             executingScripts.remove(absolutePath);
         }
+
         return result.toString();
     }
 

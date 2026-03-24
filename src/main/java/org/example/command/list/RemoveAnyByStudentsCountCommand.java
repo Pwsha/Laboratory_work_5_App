@@ -2,8 +2,9 @@ package org.example.command.list;
 
 import org.example.command.Command;
 import org.example.init.StudyGroup;
-import java.util.HashSet;
-import java.util.Scanner;
+import org.example.program.CollectionManager;
+
+import java.util.Optional;
 
 /**
  * Команда для удаления элемента по количеству студентов.
@@ -11,30 +12,27 @@ import java.util.Scanner;
  * @version v1.3
  */
 public class RemoveAnyByStudentsCountCommand implements Command {
+    private final CollectionManager manager;
+
+    public RemoveAnyByStudentsCountCommand(CollectionManager manager) {
+        this.manager = manager;
+    }
 
     @Override
-    public String execute(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
-        if (args.length == 0) {
-            return "Ошибка: укажите studentsCount";
-        } else if (args.length > 1) {
-            return "Ошибка: указано больше одного аргумента";
-        }
+    public String execute(StudyGroup group) {
+        return "Ошибка: используйте метод с studentsCount";
+    }
 
-        try {
-            long count = Long.parseLong(args[0]);
-            StudyGroup remove = collection.stream()
-                    .filter(g -> g.getStudentsCount() == count)
-                    .findFirst()
-                    .orElse(null);
+    public String execute(Long studentsCount) {
+        Optional<StudyGroup> toRemove = manager.getCollection().stream()
+                .filter(g -> g.getStudentsCount() == studentsCount)
+                .findFirst();
 
-            if (remove != null) {
-                collection.remove(remove);
-                return "Элемент с studentsCount=" + count + " удален (id=" + remove.getId() + ")";
-            } else {
-                return "Элемент с studentsCount=" + count + " не найден";
-            }
-        } catch (NumberFormatException e) {
-            return "Ошибка: studentsCount должен быть числом";
+        if (toRemove.isPresent()) {
+            manager.removeById(toRemove.get().getId());
+            return "Элемент с studentsCount=" + studentsCount + " удален";
+        } else {
+            return "Элемент с studentsCount=" + studentsCount + " не найден";
         }
     }
 

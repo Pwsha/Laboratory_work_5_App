@@ -5,8 +5,6 @@ import org.example.init.StudyGroup;
 import org.example.program.CollectionManager;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Scanner;
 
 /**
  * Класс команды сохранения файла
@@ -21,7 +19,7 @@ public class SaveCommand implements Command {
     }
 
     @Override
-    public String execute(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
+    public String execute(StudyGroup group) {
         try {
             manager.save();
             return "Коллекция сохранена в файл";

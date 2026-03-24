@@ -5,8 +5,6 @@ import org.example.init.StudyGroup;
 import org.example.program.*;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Scanner;
 
 /**
  * Класс команды вывода информации о коллекции.
@@ -14,20 +12,20 @@ import java.util.Scanner;
  * @version v1.3
  */
 public class InfoCommand implements Command {
-    private final LocalDateTime initializationDate;
     private final CollectionManager manager;
+    private final LocalDateTime startTime;
 
-    public InfoCommand(LocalDateTime initializationDate, CollectionManager manager) {
-        this.initializationDate = initializationDate;
+    public InfoCommand(CollectionManager manager, LocalDateTime startTime) {
         this.manager = manager;
+        this.startTime = startTime;
     }
 
     @Override
-    public String execute(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
+    public String execute(StudyGroup group) {
         return String.format(
                 "Тип коллекции: %s\nДата инициализации: %s\nКоличество элементов: %d",
                 manager.getCollection().getClass().getSimpleName(),
-                initializationDate,
+                startTime,
                 manager.getCollection().size()
         );
     }

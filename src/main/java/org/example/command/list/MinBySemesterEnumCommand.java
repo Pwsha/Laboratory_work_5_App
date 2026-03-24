@@ -2,10 +2,9 @@ package org.example.command.list;
 
 import org.example.command.Command;
 import org.example.init.StudyGroup;
+import org.example.program.CollectionManager;
 
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Scanner;
 
 /**
  * Класс команды для поиска объекта с минимальным семестром
@@ -13,21 +12,25 @@ import java.util.Scanner;
  * @version v1.3
  */
 public class MinBySemesterEnumCommand implements Command {
+    private final CollectionManager manager;
+
+    public MinBySemesterEnumCommand(CollectionManager manager) {
+        this.manager = manager;
+    }
 
     @Override
-    public String execute(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
-        if (collection.isEmpty()) {
+    public String execute(StudyGroup group) {
+        if (manager.getCollection().isEmpty()) {
             return "Коллекция пуста";
         }
 
-        StudyGroup min = collection.stream()
+        StudyGroup min = manager.getCollection().stream()
                 .min(Comparator.comparing(StudyGroup::getSemesterEnum))
                 .orElse(null);
 
-        return min != null ?
-                "Элемент с минимальным semesterEnum:\n  " + min :
-                "Не удалось найти элемент";
+        return "Элемент с минимальным semesterEnum:\n" + min;
     }
+
 
     @Override
     public String getName() { return "min_by_semester_enum"; }

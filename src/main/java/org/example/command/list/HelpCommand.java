@@ -19,12 +19,12 @@ public class HelpCommand implements Command {
     }
 
     @Override
-    public String execute(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
+    public String execute(StudyGroup group) {
         StringBuilder sb = new StringBuilder("Доступные команды:\n");
         commands.values().stream()
                 .sorted((c1, c2) -> c1.getName().compareTo(c2.getName()))
-                .forEach(cmd -> sb.append(String.format("  %-30s - %s\n",
-                        cmd.getSyntax(), cmd.getDescription())));
+                .forEach(cmd -> sb.append("  ").append(cmd.getSyntax())
+                        .append(" - ").append(cmd.getDescription()).append("\n"));
         return sb.toString();
     }
 

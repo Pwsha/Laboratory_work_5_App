@@ -2,9 +2,8 @@ package org.example.command.list;
 
 import org.example.command.*;
 import org.example.init.StudyGroup;
+import org.example.program.CollectionManager;
 
-import java.util.HashSet;
-import java.util.Scanner;
 
 /**
  * Класс команды добавления элемента если он больше других
@@ -12,39 +11,31 @@ import java.util.Scanner;
  * @version v1.3
  */
 public class AddIfMaxCommand implements Command {
+    private final CollectionManager manager;
+
+    public AddIfMaxCommand(CollectionManager manager) {
+        this.manager = manager;
+    }
 
     @Override
-    public String execute(String[] args, HashSet<StudyGroup> collection, Scanner scanner) {
-        StudyGroup newGroup;
-
-        if (args.length == 0) {
-            newGroup = CommandHelper.readStudyGroup(scanner, collection);
-        } else if (args.length == 1) {
-            String input = String.join(" ", args);
-            if (input.startsWith("{") && input.endsWith("}")) {
-                input = input.substring(1, input.length() - 1);
-            }
-            newGroup = GroupParser.parseFromString(input, collection);
-        } else {
-            return "Oшибка: введено неверное количество аргументов";
+    public String execute(StudyGroup group) {
+        if (manager.getCollection().isEmpty()) {
+            manager.add(group);
+            return "Элемент добавлен (коллекция была пуста) c id" + group.getId();
         }
 
-        if (collection.isEmpty()) {
-            collection.add(newGroup);
-            return "Элемент добавлен (коллекция была пуста) с id: " + newGroup.getId();
-        }
-
-        StudyGroup max = collection.stream()
+        StudyGroup max = manager.getCollection().stream()
                 .max(StudyGroup::compareTo)
                 .orElse(null);
 
-        if (newGroup.compareTo(max) > 0) {
-            collection.add(newGroup);
-            return "Элемент добавлен с id: " + newGroup.getId() + " (превышает максимальный)";
-        } else {
-            return "Элемент не добавлен: не превышает максимальный элемент коллекции";
+        if (group.compareTo(max) > 0) {
+            manager.add(group);
+            return "Элемент добавлен (превышает максимальный) c id" + group.getId();
         }
+
+        return "Элемент не добавлен (не превышает максимальный)";
     }
+
 
     @Override
     public String getName() { return "add_if_max {element}"; }
